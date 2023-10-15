@@ -1,10 +1,15 @@
 import os
+import tensorflow as tf
 from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
 
+from utils import predict
+
+
 app = Flask(__name__)
+model = tf.keras.models.load_model('models/LSTM_v1.h5')
 
 line_bot_api = LineBotApi('6pQcNXYxqu0Kwiu4gfZcDtkt/qHcfApZ3s0DSGG+ISNWTSUv+I4p4YRWkOVHVngVFf68pWJ09p04yqZtJkfUu4OipzWrr0vwJGqC/nlMzTPq4bPutXzBm/FUBgtMab67e+KfxlW0MR1aE/bAdxlbvQdB04t89/1O/w1cDnyilFU=')
 handler = WebhookHandler('ecfb9d5eefbcbb9f678a79a25af244d3')
@@ -31,8 +36,18 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    message = TextSendMessage(text=event.message.text)
+    if event.message.text.lower() == "predict":
+        reply_text = predict(model)
+    else:
+        reply_text = event.message.text
+
+    message = TextSendMessage(text=reply_text)
     line_bot_api.reply_message(event.reply_token,message)
+
+
+@app.route('/predict', methods=['GET'])
+def predict_endpoint():
+     return {"prediction": predict(model)}
 
 
 if __name__ == "__main__":
