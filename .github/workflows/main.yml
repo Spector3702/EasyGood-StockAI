@@ -15,7 +15,7 @@ jobs:
 
     - name: Deploy to GCP
       run: |-
-        echo "${{ secrets.GCLOUD_AUTH }}" > gcloud_auth_key.json
+        echo '${{ secrets.GCLOUD_AUTH }}' > gcloud_auth_key.json
         gcloud auth activate-service-account --key-file=gcloud_auth_key.json
         gcloud builds submit --config cloudbuild.yaml
       env:
