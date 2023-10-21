@@ -1,0 +1,34 @@
+name: Deploy to Google Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Google Cloud CLI
+      run: |-
+        echo '${{ secrets.GCLOUD_AUTH }}' > gcloud_auth_key.json
+        gcloud auth activate-service-account --key-file=gcloud_auth_key.json
+        gcloud config set project stockmarketindexai
+      env:
+        GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+
+    - name: Build and Push to Google Container Registry
+      run: |-
+        gcloud builds submit --config docker/cloudbuild.yaml
+
+    - name: Deploy to Cloud Run
+      uses: google-github-actions/deploy-cloudrun@main
+      with:
+        service: stockmarketindexai
+        image: gcr.io/stockmarketindexai/linebot-lstm:latest
+        region: asia-east1
+        credentials: ${{ secrets.GCLOUD_AUTH }}
