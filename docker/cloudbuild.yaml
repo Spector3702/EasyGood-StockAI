@@ -1,6 +1,6 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/stockmarketindexai/linebot-LSTM:$SHORT_SHA', '.']
+    args: ['build', '-t', 'gcr.io/stockmarketindexai/linebot-lstm:$SHORT_SHA', '.']
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/stockmarketindexai/linebot-LSTM:$SHORT_SHA']
+    args: ['push', 'gcr.io/stockmarketindexai/linebot-lstm:$SHORT_SHA']
