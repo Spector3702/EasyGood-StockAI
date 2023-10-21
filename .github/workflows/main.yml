@@ -17,6 +17,6 @@ jobs:
       run: |-
         echo '${{ secrets.GCLOUD_AUTH }}' > gcloud_auth_key.json
         gcloud auth activate-service-account --key-file=gcloud_auth_key.json
-        gcloud builds submit --config cloudbuild.yaml
+        gcloud builds submit --config docker/cloudbuild.yaml
       env:
         GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
