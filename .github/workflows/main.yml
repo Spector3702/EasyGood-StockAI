@@ -1,0 +1,21 @@
+name: Deploy to Google Cloud Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Deploy to GCP
+      run: |-
+        gcloud auth activate-service-account --key-file=$GCLOUD_AUTH
+        gcloud builds submit --config docker/cloudbuild.yaml
+      env:
+        GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
