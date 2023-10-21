@@ -42,7 +42,7 @@ def handle_message(event):
         reply_text = event.message.text
 
     message = TextSendMessage(text=reply_text)
-    line_bot_api.reply_message(event.reply_token,message)
+    line_bot_api.reply_message(event.reply_token, message)
 
 
 @app.route('/predict', methods=['GET'])
