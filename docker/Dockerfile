@@ -1,10 +1,9 @@
-FROM tensorflow/tensorflow:latest
+FROM tensorflow/tensorflow:2.14.0rc0
 
 WORKDIR /app
 
-RUN pip install blinker
 COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install -r --ignore-installed requirements.txt
 
 COPY models models
 COPY server server
