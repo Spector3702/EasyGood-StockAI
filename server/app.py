@@ -1,10 +1,11 @@
 import os
 import tensorflow as tf
-from flask import Flask, request, abort
+from flask import Flask, request, abort, jsonify
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
 
+from scraper import Scrapper
 from utils import predict
 
 
@@ -38,6 +39,14 @@ def callback():
 def handle_message(event):
     if event.message.text.lower() == "predict":
         reply_text = predict(model)
+    elif event.message.text.lower() == "twii":
+        scrapper = Scrapper()
+        data = scrapper.get_TWII_data()
+        message = jsonify(data)
+    elif event.message.text.lower() == "tw future":
+        scrapper = Scrapper()
+        data = scrapper.get_TW_Future_data()
+        message = jsonify(data)
     else:
         reply_text = event.message.text
 
@@ -48,6 +57,20 @@ def handle_message(event):
 @app.route('/predict', methods=['GET'])
 def predict_endpoint():
      return {"prediction": predict(model)}
+
+
+@app.route('/get-TWII', methods=['GET'])
+def get_TWII_today():
+    scrapper = Scrapper()
+    data = scrapper.get_TWII_data()
+    return jsonify(data)
+
+
+@app.route('/get-TW-Future', methods=['GET'])
+def get_TW_Future_today():
+    scrapper = Scrapper()
+    data = scrapper.get_TW_Future_data()
+    return jsonify(data)
 
 
 if __name__ == "__main__":
