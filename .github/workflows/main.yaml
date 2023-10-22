@@ -8,7 +8,6 @@ on:
 jobs:
     build_and_push:
         runs-on: ubuntu-latest
-        if: contains(github.event.head_commit.modified, 'docker/')
         
         steps:
         - name: Checkout code
