@@ -44,11 +44,11 @@ def handle_message(event):
     elif event.message.text.lower() == "twii":
         scrapper = Scrapper()
         data = scrapper.get_TWII_data()
-        reply_text = json.dumps(data)
+        reply_text = json.dumps(data, ensure_ascii=False)
     elif event.message.text.lower() == "tw future":
         scrapper = Scrapper()
         data = scrapper.get_TW_Future_data()
-        reply_text = json.dumps(data)
+        reply_text = json.dumps(data, ensure_ascii=False)
     else:
         reply_text = event.message.text
 

@@ -18,20 +18,21 @@ class Scrapper():
         tree = self.get_content_tree(url)
 
         xpaths = {
-            "成交金額(億)": "/html/body/div[1]/div/div/div/div/div[5]/div/div[1]/div/div[3]/div/section[1]/div[2]/div[2]/div/ul/li[6]/span[2]",
-            "開盤": "/html/body/div[1]/div/div/div/div/div[5]/div/div[1]/div/div[3]/div/section[1]/div[2]/div[2]/div/ul/li[2]/span[2]",
-            "最高": "/html/body/div[1]/div/div/div/div/div[5]/div/div[1]/div/div[3]/div/section[1]/div[2]/div[2]/div/ul/li[3]/span[2]",
-            "最低": "/html/body/div[1]/div/div/div/div/div[5]/div/div[1]/div/div[3]/div/section[1]/div[2]/div[2]/div/ul/li[4]/span[2]",
-            "收盤": "/html/body/div[1]/div/div/div/div/div[5]/div/div[1]/div/div[3]/div/section[1]/div[2]/div[2]/div/ul/li[7]/span[2]"
-        }
+        "成交金額(億)": "//li[contains(@class, 'price-detail-item')]//span[contains(text(), '成交金額(億)')]/following-sibling::span",
+        "開盤": "//li[contains(@class, 'price-detail-item')]//span[contains(text(), '開盤')]/following-sibling::span",
+        "最高": "//li[contains(@class, 'price-detail-item')]//span[contains(text(), '最高')]/following-sibling::span",
+        "最低": "//li[contains(@class, 'price-detail-item')]//span[contains(text(), '最低')]/following-sibling::span",
+        "收盤": "//li[contains(@class, 'price-detail-item')]//span[contains(text(), '昨收')]/following-sibling::span"
+    }
 
         data = {}
         for key, path in xpaths.items():
             element = tree.xpath(path)
             if element:
-                data[key] = element[0].text
+                data[key] = element[0].text_content().strip()
             else:
                 print(f"No element found for XPath: {path}")
+                
 
         return data
     
