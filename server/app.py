@@ -17,6 +17,8 @@ line_bot_api = LineBotApi('6pQcNXYxqu0Kwiu4gfZcDtkt/qHcfApZ3s0DSGG+ISNWTSUv+I4p4
 handler = WebhookHandler('ecfb9d5eefbcbb9f678a79a25af244d3')
 line_bot_api.push_message('U6e55546093da4b2e769f0edc16fec07f', TextSendMessage(text='你可以開始了'))
 
+scrapper = Scrapper('C:/Users/overf/Desktop/python/chromedriver-win64/chromedriver.exe')
+
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -41,12 +43,10 @@ def handle_message(event):
     if event.message.text.lower() == "predict":
         reply_text = predict(model)
     elif event.message.text.lower() == "twii":
-        scrapper = Scrapper()
         data = scrapper.get_TWII_data()
         data_string = '\n'.join(f"{key}: {value}" for key, value in data.items())
         reply_text = data_string
     elif event.message.text.lower() == "tw future":
-        scrapper = Scrapper()
         data = scrapper.get_TW_Future_data()
         data_string = '\n'.join(f"{key}: {value}" for key, value in data.items())
         reply_text = data_string
@@ -67,15 +67,19 @@ def predict_endpoint():
 
 @app.route('/get-TWII', methods=['GET'])
 def get_TWII_today():
-    scrapper = Scrapper()
     data = scrapper.get_TWII_data()
     return jsonify(data)
 
 
 @app.route('/get-TW-Future', methods=['GET'])
 def get_TW_Future_today():
-    scrapper = Scrapper()
     data = scrapper.get_TW_Future_data()
+    return jsonify(data)
+
+
+@app.route('/get-SOX', methods=['GET'])
+def get_SOX_today():
+    data = scrapper.get_SOX_data()
     return jsonify(data)
 
 
