@@ -1,5 +1,4 @@
 import os
-import json
 import tensorflow as tf
 
 from flask import Flask, request, abort, jsonify
@@ -44,11 +43,13 @@ def handle_message(event):
     elif event.message.text.lower() == "twii":
         scrapper = Scrapper()
         data = scrapper.get_TWII_data()
-        reply_text = json.dumps(data, ensure_ascii=False)
+        data_string = '\n'.join(f"{key}: {value}" for key, value in data.items())
+        reply_text = data_string
     elif event.message.text.lower() == "tw future":
         scrapper = Scrapper()
         data = scrapper.get_TW_Future_data()
-        reply_text = json.dumps(data, ensure_ascii=False)
+        data_string = '\n'.join(f"{key}: {value}" for key, value in data.items())
+        reply_text = data_string
     else:
         reply_text = event.message.text
 
