@@ -1,5 +1,7 @@
 import os
+import json
 import tensorflow as tf
+
 from flask import Flask, request, abort, jsonify
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
@@ -42,13 +44,16 @@ def handle_message(event):
     elif event.message.text.lower() == "twii":
         scrapper = Scrapper()
         data = scrapper.get_TWII_data()
-        reply_text = jsonify(data)
+        reply_text = json.dumps(data)
     elif event.message.text.lower() == "tw future":
         scrapper = Scrapper()
         data = scrapper.get_TW_Future_data()
-        reply_text = jsonify(data)
+        reply_text = json.dumps(data)
     else:
         reply_text = event.message.text
+
+    if not isinstance(reply_text, str):
+        reply_text = str(reply_text)
 
     message = TextSendMessage(text=reply_text)
     line_bot_api.reply_message(event.reply_token, message)
