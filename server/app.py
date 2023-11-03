@@ -1,4 +1,4 @@
-import os
+import argparse
 import tensorflow as tf
 
 from flask import Flask, request, abort, jsonify
@@ -10,14 +10,17 @@ from scraper import Scrapper
 from utils import predict
 
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--driver", required=True, help="spceify path to chromedriver.")
+args = parser.parse_args()
+
 app = Flask(__name__)
 model = tf.keras.models.load_model('models/LSTM_v1.h5')
+scrapper = Scrapper(args.driver)
 
 line_bot_api = LineBotApi('6pQcNXYxqu0Kwiu4gfZcDtkt/qHcfApZ3s0DSGG+ISNWTSUv+I4p4YRWkOVHVngVFf68pWJ09p04yqZtJkfUu4OipzWrr0vwJGqC/nlMzTPq4bPutXzBm/FUBgtMab67e+KfxlW0MR1aE/bAdxlbvQdB04t89/1O/w1cDnyilFU=')
 handler = WebhookHandler('ecfb9d5eefbcbb9f678a79a25af244d3')
 line_bot_api.push_message('U6e55546093da4b2e769f0edc16fec07f', TextSendMessage(text='你可以開始了'))
-
-scrapper = Scrapper('C:/Users/overf/Desktop/python/chromedriver-win64/chromedriver.exe')
 
 
 @app.route("/callback", methods=['POST'])
@@ -84,5 +87,4 @@ def get_SOX_today():
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=5000)
