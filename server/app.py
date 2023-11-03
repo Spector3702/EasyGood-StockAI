@@ -54,6 +54,10 @@ def handle_message(event):
         data = scrapper.get_TW_Future_data()
         data_string = '\n'.join(f"{key}: {value}" for key, value in data.items())
         reply_text = data_string
+    elif event.message.text.lower() == "sox":
+        data = scrapper.get_SOX_data()
+        data_string = '\n'.join(f"{key}: {value}" for key, value in data.items())
+        reply_text = data_string
     else:
         reply_text = event.message.text
 
