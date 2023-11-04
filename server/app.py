@@ -8,7 +8,7 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
 
 from scraper import Scrapper
-from utils import predict
+from utils import predict, send_message_linebot
 
 
 parser = argparse.ArgumentParser()
@@ -46,24 +46,42 @@ def callback():
 def handle_message(event):
     if event.message.text.lower() == "predict":
         reply_text = predict(model)
+
     elif event.message.text.lower() == "twii":
+        send_message_linebot(line_bot_api, event, '正在查詢大盤指數...')
         data = scrapper.get_TWII_data()
         reply_text = '\n'.join(f"{key}: {value}" for key, value in data.items())
+
     elif event.message.text.lower() == "tw future":
+        send_message_linebot(line_bot_api, event, '正在查詢三大法人...')
         data = scrapper.get_TW_Future_data()
-        reply_text = '\n'.join(f"{key}: {value}" for key, value in data.items())
+        reply_text = '淨多單留倉(張):\n'
+        reply_text += '\n'.join(f"{key}: {value}" for key, value in data.items())
+
     elif event.message.text.lower() == "sox":
+        send_message_linebot(line_bot_api, event, '正在查詢費半指數...')
         data = scrapper.get_SOX_data()
-        reply_text = '\n'.join(f"{key}: {value}" for key, value in data.items())
+        reply_text = '您好，今日費半指數為:\n'
+        reply_text += '\n'.join(f"{key}: {value}" for key, value in data.items())
+
     elif event.message.text.lower() == "tsmc":
+        send_message_linebot(line_bot_api, event, '正在查詢台積電指數...')
         data = scrapper.get_TSMC_data()
-        reply_text = '\n'.join(f"{key}: {value}" for key, value in data.items())
+        reply_text = '您好，今日台積電股價為:\n'
+        reply_text += '\n'.join(f"{key}: {value}" for key, value in data.items())
+
     elif event.message.text.lower() == "usd":
+        send_message_linebot(line_bot_api, event, '正在查詢美元匯率...')
         data = scrapper.get_USD_Index_data()
-        reply_text = '\n'.join(f"{key}: {value}" for key, value in data.items())
+        reply_text = '您好，今日美元/台幣匯率為:\n'
+        reply_text += '\n'.join(f"{key}: {value}" for key, value in data.items())
+
     elif event.message.text.lower() == "jpy":
+        send_message_linebot(line_bot_api, event, '正在查詢美元/日圓...')
         data = scrapper.get_JPY_Index_data()
-        reply_text = '\n'.join(f"{key}: {value}" for key, value in data.items())
+        reply_text = '您好，今日美元/日幣匯率為:\n'
+        reply_text += '\n'.join(f"{key}: {value}" for key, value in data.items())
+
     else:
         reply_text = event.message.text
 

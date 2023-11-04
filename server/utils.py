@@ -1,3 +1,13 @@
+from linebot.models import TextSendMessage
+
+
+def send_message_linebot(line_bot_api, event, text):
+     line_bot_api.reply_message(
+          event.reply_token,
+          TextSendMessage(text=text)
+     )
+
+
 def predict(model):
     input_data =[[[0.10141737, 0.04451055, 0.00903744, 0.33245956, 0.33114825,
          0.33269302, 0.53941869, 0.46687782, 0.47152187, 0.21658305,
