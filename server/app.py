@@ -88,8 +88,7 @@ def handle_message(event):
     if not isinstance(reply_text, str):
         reply_text = str(reply_text)
 
-    message = TextSendMessage(text=reply_text)
-    line_bot_api.reply_message(event.reply_token, message)
+    send_message_linebot(line_bot_api, event, reply_text)
 
 
 @app.route('/predict', methods=['GET'])

@@ -2,10 +2,9 @@ from linebot.models import TextSendMessage
 
 
 def send_message_linebot(line_bot_api, event, text):
-     line_bot_api.reply_message(
-          event.reply_token,
-          TextSendMessage(text=text)
-     )
+     user_id = event.source.user_id
+     message = TextSendMessage(text=text)
+     line_bot_api.push_message(user_id, message)
 
 
 def predict(model):
