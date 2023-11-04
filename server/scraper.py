@@ -69,7 +69,7 @@ class Scrapper():
         return data
     
     def get_USD_Index_data(self):
-        url = "https://www.stockq.org/index/USD.php"
+        url = "https://www.stockq.org/forex/USDTWD.php"
         tree = self.get_content_tree(url)
 
         xpaths = {
@@ -91,7 +91,7 @@ class Scrapper():
         return data
     
     def get_JPY_Index_data(self):
-        url = "https://www.stockq.org/index/XJY.php"
+        url = "https://www.stockq.org/forex/USDJPY.php"
         tree = self.get_content_tree(url)
 
         xpaths = {

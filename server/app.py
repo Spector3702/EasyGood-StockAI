@@ -48,27 +48,22 @@ def handle_message(event):
         reply_text = predict(model)
     elif event.message.text.lower() == "twii":
         data = scrapper.get_TWII_data()
-        data_string = '\n'.join(f"{key}: {value}" for key, value in data.items())
-        reply_text = data_string
+        reply_text = '\n'.join(f"{key}: {value}" for key, value in data.items())
     elif event.message.text.lower() == "tw future":
         data = scrapper.get_TW_Future_data()
-        data_string = '\n'.join(f"{key}: {value}" for key, value in data.items())
-        reply_text = data_string
+        reply_text = '\n'.join(f"{key}: {value}" for key, value in data.items())
     elif event.message.text.lower() == "sox":
         data = scrapper.get_SOX_data()
-        data_string = '\n'.join(f"{key}: {value}" for key, value in data.items())
+        reply_text = '\n'.join(f"{key}: {value}" for key, value in data.items())
     elif event.message.text.lower() == "tsmc":
         data = scrapper.get_TSMC_data()
-        data_string = '\n'.join(f"{key}: {value}" for key, value in data.items())
-        reply_text = data_string
+        reply_text = '\n'.join(f"{key}: {value}" for key, value in data.items())
     elif event.message.text.lower() == "usd":
         data = scrapper.get_USD_Index_data()
-        data_string = '\n'.join(f"{key}: {value}" for key, value in data.items())
-        reply_text = data_string
+        reply_text = '\n'.join(f"{key}: {value}" for key, value in data.items())
     elif event.message.text.lower() == "jpy":
         data = scrapper.get_JPY_Index_data()
-        data_string = '\n'.join(f"{key}: {value}" for key, value in data.items())
-        reply_text = data_string
+        reply_text = '\n'.join(f"{key}: {value}" for key, value in data.items())
     else:
         reply_text = event.message.text
 
