@@ -11,12 +11,13 @@ from selenium.webdriver.common.by import By
 
 class Scrapper():
     def __init__(self, driver_path) :
-        self.chrome_options = Options()
-        self.chrome_options.add_argument("--headless")
-        self.chrome_options.add_argument("--disable-gpu")
-        self.chrome_options.add_argument("--disable-dev-shm-usage")
-        self.chrome_options.add_argument("--no-sandbox")
-        self.service = Service(executable_path=driver_path)
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        service = Service(executable_path=driver_path)
+        self.driver = webdriver.Chrome(service=service, options=chrome_options)
 
     def get_content_tree(self, url):
         response = requests.get(url)
@@ -114,8 +115,7 @@ class Scrapper():
     
     def get_SOX_data(self):
         url = "https://www.google.com/search?q=%E8%B2%BB%E5%8D%8A&oq=%E8%B2%BB%E5%8D%8A&aqs=chrome..69i57j69i59l2.3056j0j1&sourceid=chrome&ie=UTF-8"
-        driver = webdriver.Chrome(service=self.service, options=self.chrome_options)
-        driver.get(url)
+        self.driver.get(url)
 
         xpaths = {
             "開盤": "/html/body/div[5]/div/div[10]/div[3]/div[1]/div[2]/div/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div[3]/div/g-card-section[2]/div/div/div[1]/table/tbody/tr[1]/td[2]/div",
@@ -126,7 +126,7 @@ class Scrapper():
 
         data = {}
         for key, path in xpaths.items():
-            input_element = WebDriverWait(driver, 10).until(
+            input_element = WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located((By.XPATH, path))
             )
             if input_element:
@@ -135,14 +135,11 @@ class Scrapper():
             else:
                 print(f"No element found for XPath: {path}")
 
-        driver.quit()
-
         return data
     
     def get_TSMC_data(self):
         url = "https://www.google.com/search?q=%E5%8F%B0%E7%A9%8D%E9%9B%BB%E8%82%A1%E5%83%B9"
-        driver = webdriver.Chrome(service=self.service, options=self.chrome_options)
-        driver.get(url)
+        self.driver.get(url)
 
         xpaths = {
             "開盤": "/html/body/div[5]/div/div[10]/div[3]/div[1]/div[2]/div/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div[3]/div/g-card-section[2]/div/div/div[1]/table/tbody/tr[1]/td[2]/div",
@@ -153,18 +150,14 @@ class Scrapper():
 
         data = {}
         for key, path in xpaths.items():
-            input_element = WebDriverWait(driver, 10).until(
+            input_element = WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located((By.XPATH, path))
             )
             if input_element:
                 text_content = input_element.text
-                if key == "收盤":
-                    text_content = text_content.split('\n')[-1]
                 data[key] = text_content
             else:
                 print(f"No element found for XPath: {path}")
-
-        driver.quit()
 
         return data
 
