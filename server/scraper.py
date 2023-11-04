@@ -160,5 +160,3 @@ class Scrapper():
                 print(f"No element found for XPath: {path}")
 
         return data
-
-
