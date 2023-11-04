@@ -57,6 +57,17 @@ def handle_message(event):
     elif event.message.text.lower() == "sox":
         data = scrapper.get_SOX_data()
         data_string = '\n'.join(f"{key}: {value}" for key, value in data.items())
+    elif event.message.text.lower() == "tsmc":
+        data = scrapper.get_TSMC_data()
+        data_string = '\n'.join(f"{key}: {value}" for key, value in data.items())
+        reply_text = data_string
+    elif event.message.text.lower() == "usd":
+        data = scrapper.get_USD_Index_data()
+        data_string = '\n'.join(f"{key}: {value}" for key, value in data.items())
+        reply_text = data_string
+    elif event.message.text.lower() == "jpy":
+        data = scrapper.get_JPY_Index_data()
+        data_string = '\n'.join(f"{key}: {value}" for key, value in data.items())
         reply_text = data_string
     else:
         reply_text = event.message.text
@@ -88,6 +99,24 @@ def get_TW_Future_today():
 @app.route('/get-SOX', methods=['GET'])
 def get_SOX_today():
     data = scrapper.get_SOX_data()
+    return jsonify(data)
+
+
+@app.route('/get-TSMC', methods=['GET'])
+def get_TSMC_today():
+    data = scrapper.get_TSMC_data()
+    return jsonify(data)
+
+
+@app.route('/get-USD', methods=['GET'])
+def get_USD_today():
+    data = scrapper.get_USD_Index_data()
+    return jsonify(data)
+
+
+@app.route('/get-JPY', methods=['GET'])
+def get_JPY_today():
+    data = scrapper.get_JPY_Index_data()
     return jsonify(data)
 
 

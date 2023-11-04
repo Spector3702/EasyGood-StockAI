@@ -68,6 +68,50 @@ class Scrapper():
 
         return data
     
+    def get_USD_Index_data(self):
+        url = "https://www.stockq.org/index/USD.php"
+        tree = self.get_content_tree(url)
+
+        xpaths = {
+            "開盤": "//table[@class='indexpagetable']/tr[@class='row2']/td[6]",
+            "最高": "//table[@class='indexpagetable']/tr[@class='row2']/td[4]",
+            "最低": "//table[@class='indexpagetable']/tr[@class='row2']/td[5]",
+            "指數": "//table[@class='indexpagetable']/tr[@class='row2']/td[1]"
+        }
+
+        data = {}
+        for key, path in xpaths.items():
+            element = tree.xpath(path)
+            if element:
+                cleaned_value = element[0].text.replace("\r", "").replace("\t", "").strip()
+                data[key] = cleaned_value
+            else:
+                print(f"No element found for XPath: {path}")
+
+        return data
+    
+    def get_JPY_Index_data(self):
+        url = "https://www.stockq.org/index/XJY.php"
+        tree = self.get_content_tree(url)
+
+        xpaths = {
+            "開盤": "//table[@class='indexpagetable']/tr[@class='row2']/td[6]",
+            "最高": "//table[@class='indexpagetable']/tr[@class='row2']/td[4]",
+            "最低": "//table[@class='indexpagetable']/tr[@class='row2']/td[5]",
+            "指數": "//table[@class='indexpagetable']/tr[@class='row2']/td[1]"
+        }
+
+        data = {}
+        for key, path in xpaths.items():
+            element = tree.xpath(path)
+            if element:
+                cleaned_value = element[0].text.replace("\r", "").replace("\t", "").strip()
+                data[key] = cleaned_value
+            else:
+                print(f"No element found for XPath: {path}")
+
+        return data
+    
     def get_SOX_data(self):
         url = "https://www.google.com/search?q=%E8%B2%BB%E5%8D%8A&oq=%E8%B2%BB%E5%8D%8A&aqs=chrome..69i57j69i59l2.3056j0j1&sourceid=chrome&ie=UTF-8"
         driver = webdriver.Chrome(service=self.service, options=self.chrome_options)
@@ -87,6 +131,35 @@ class Scrapper():
             )
             if input_element:
                 text_content = input_element.text
+                data[key] = text_content
+            else:
+                print(f"No element found for XPath: {path}")
+
+        driver.quit()
+
+        return data
+    
+    def get_TSMC_data(self):
+        url = "https://www.google.com/search?q=%E5%8F%B0%E7%A9%8D%E9%9B%BB%E8%82%A1%E5%83%B9"
+        driver = webdriver.Chrome(service=self.service, options=self.chrome_options)
+        driver.get(url)
+
+        xpaths = {
+            "開盤": "/html/body/div[5]/div/div[10]/div[3]/div[1]/div[2]/div/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div[3]/div/g-card-section[2]/div/div/div[1]/table/tbody/tr[1]/td[2]/div",
+            "最高": "/html/body/div[5]/div/div[10]/div[3]/div[1]/div[2]/div/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div[3]/div/g-card-section[2]/div/div/div[1]/table/tbody/tr[2]/td[2]/div",
+            "最低": "/html/body/div[5]/div/div[10]/div[3]/div[1]/div[2]/div/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div[3]/div/g-card-section[2]/div/div/div[1]/table/tbody/tr[3]/td[2]/div",
+            "收盤": "/html/body/div[5]/div/div[10]/div[3]/div[1]/div[2]/div/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div[3]/div/g-card-section[1]/div/div[2]/div/div/div[2]/div[1]/div[1]/span[6]"
+        }
+
+        data = {}
+        for key, path in xpaths.items():
+            input_element = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, path))
+            )
+            if input_element:
+                text_content = input_element.text
+                if key == "收盤":
+                    text_content = text_content.split('\n')[-1]
                 data[key] = text_content
             else:
                 print(f"No element found for XPath: {path}")
