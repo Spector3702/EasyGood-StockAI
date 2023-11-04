@@ -21,9 +21,9 @@ jobs:
           env:
             GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
     
-        - name: Build and Push to Google Container Registry
-          run: |-
-            gcloud builds submit --config docker/cloudbuild.yaml
+        # - name: Build and Push to Google Container Registry
+        #   run: |-
+        #     gcloud builds submit --config docker/cloudbuild.yaml
 
         - name: Authenticate to Google Cloud
           uses: google-github-actions/auth@v0.4.0
@@ -34,5 +34,5 @@ jobs:
           uses: google-github-actions/deploy-cloudrun@main
           with:
             service: stockmarketindexai
-            image: gcr.io/stockmarketindexai/linebot-lstm:latest
+            image: gcr.io/stockmarketindexai/linebot-lstm@sha256:077035e6f5e5eab7f31e836b79dddbc62cd783681d9676ed14867127a6d6647b
             region: asia-east1
