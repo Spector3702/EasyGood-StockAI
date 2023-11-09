@@ -132,7 +132,7 @@ def get_JPY_today():
     return jsonify(data)
 
 
-@app.route('/append_data', method=['GET'])
+@app.route('/append_data', methods=['GET'])
 def append_row_data():
     single_row = build_single_row_data(scrapper)
     append_row_to_gcs_file('stockmarketindexai-sql', 'mock_sql.csv', single_row)
