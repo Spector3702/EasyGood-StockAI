@@ -1,10 +1,44 @@
+import csv
+from datetime import datetime
 from linebot.models import TextSendMessage
+
+from server.gcs_helper import GcsHelper
 
 
 def send_message_linebot(line_bot_api, event, text):
      user_id = event.source.user_id
      message = TextSendMessage(text=text)
      line_bot_api.push_message(user_id, message)
+
+
+def build_single_row_data(scrapper):
+     twii = scrapper.get_TWII_data()
+     tw_future = scrapper.get_TW_Future()
+     sox = scrapper.get_SOX_data()
+     tsmc = scrapper.get_TSMC_data()
+     usd = scrapper.get_USD_Index_data()
+     jpy = scrapper.get_JPY_Index_data()
+     return {
+          "date": datetime.now().strftime("%Y/%m/%d"),
+          "大盤_開盤價": twii['開盤'], "大盤_最高價": twii['最高'], "大盤_最低價": twii['最低'], "大盤_收盤價": twii['收盤'],
+          "自營商": tw_future['自營商'], "投信": tw_future['投信'], "外資": tw_future['外資'],
+          "費半_開盤價": sox['開盤'], "費半_最高價": sox['最高'], "費半_最低價": sox['最低'], "費半_收盤價": sox['收盤'],
+          "台積_開盤價": tsmc['開盤'], "台積_最高價": tsmc['最高'], "台積_最低價": tsmc['最低'], "台積_收盤價": tsmc['收盤'],
+          "美元_開盤價": usd['開盤'], "美元_最高價": usd['最高'], "美元_最低價": usd['最低'], "美元_收盤價": usd['指數'],
+          "日圓_開盤價": jpy['開盤'], "日圓_最高價": jpy['最高'], "日圓_最低價": jpy['最低'], "日圓_收盤價": jpy['指數']
+     }
+
+
+def append_row_to_gcs_file(bucket_name, blob_name, row_data):
+     file_path = 'data/mock_sql.csv'
+     gcs_helper = GcsHelper()
+     gcs_helper.download_file_from_bucket(bucket_name, blob_name, file_path)
+
+     with open(file_path, 'a', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=row_data.keys())
+        writer.writerow(row_data)
+
+     gcs_helper.upload_file_to_bucket(bucket_name, blob_name, file_path)
 
 
 def predict(model):

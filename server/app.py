@@ -8,7 +8,7 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
 
 from scraper import Scrapper
-from utils import predict, send_message_linebot
+from utils import predict, send_message_linebot, build_single_row_data, append_row_to_gcs_file
 
 
 parser = argparse.ArgumentParser()
@@ -130,6 +130,12 @@ def get_USD_today():
 def get_JPY_today():
     data = scrapper.get_JPY_Index_data()
     return jsonify(data)
+
+
+@app.route('/append_data', method=['GET'])
+def append_row_data():
+    single_row = build_single_row_data(scrapper)
+    append_row_to_gcs_file('stockmarketindexai-sql', 'mock_sql.csv', single_row)
 
 
 if __name__ == "__main__":
