@@ -2,7 +2,7 @@ import csv
 from datetime import datetime
 from linebot.models import TextSendMessage
 
-from server.gcs_helper import GcsHelper
+from gcs_helper import GcsHelper
 
 
 def send_message_linebot(line_bot_api, event, text):
