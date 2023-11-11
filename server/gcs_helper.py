@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 from google.auth.exceptions import DefaultCredentialsError
 from google.cloud import storage
@@ -28,6 +29,7 @@ class GcsHelper:
 
     def append_row_to_gcs_file(self, bucket_name, blob_name, row_data):
         file_path = 'data/mock_sql.csv'
+        os.makedirs('data', exist_ok=True)
         self.download_file_from_bucket(bucket_name, blob_name, file_path)
 
         df = pd.DataFrame([row_data])
