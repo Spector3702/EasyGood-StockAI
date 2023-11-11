@@ -32,8 +32,15 @@ class GcsHelper:
         os.makedirs('data', exist_ok=True)
         self.download_file_from_bucket(bucket_name, blob_name, file_path)
 
-        df = pd.DataFrame([row_data])
-        df.to_csv('data\mock_sql.csv', index=False, header=True)
+        if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
+            df = pd.read_csv(file_path)
+            if row_data['date'] not in df['date'].values:
+                df = df.append(row_data, ignore_index=True)
+        else:
+            df = pd.DataFrame([row_data])
+
+        df = df.sort_index(axis=1)
+        df.to_csv(file_path, index=False, header=True)
 
         self.upload_file_to_bucket(bucket_name, blob_name, file_path)
     
