@@ -39,7 +39,7 @@ def build_single_row_data(scrapper):
 def predict(model):
      df = pd.read_csv('data/mock_sql.csv')
      df = df.sort_values(by='date')
-     latest_data = df.tail(3)
+     latest_data = df.tail(2)
 
      scaler = load('models/scaler.joblib')
      latest_data_scaled = scaler.transform(latest_data.drop(['date'], axis=1))
