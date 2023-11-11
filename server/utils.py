@@ -1,4 +1,4 @@
-import csv
+import pandas as pd
 from datetime import datetime
 from linebot.models import TextSendMessage
 
@@ -13,7 +13,7 @@ def send_message_linebot(line_bot_api, event, text):
 
 def build_single_row_data(scrapper):
      twii = scrapper.get_TWII_data()
-     tw_future = scrapper.get_TW_Future()
+     tw_future = scrapper.get_TW_Future_data()
      sox = scrapper.get_SOX_data()
      tsmc = scrapper.get_TSMC_data()
      usd = scrapper.get_USD_Index_data()
@@ -34,9 +34,8 @@ def append_row_to_gcs_file(bucket_name, blob_name, row_data):
      gcs_helper = GcsHelper()
      gcs_helper.download_file_from_bucket(bucket_name, blob_name, file_path)
 
-     with open(file_path, 'a', newline='') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=row_data.keys())
-        writer.writerow(row_data)
+     df = pd.DataFrame([row_data])
+     df.to_csv('data\mock_sql.csv', index=False, header=True)
 
      gcs_helper.upload_file_to_bucket(bucket_name, blob_name, file_path)
 

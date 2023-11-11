@@ -132,10 +132,14 @@ def get_JPY_today():
     return jsonify(data)
 
 
-@app.route('/append_data', methods=['GET'])
+@app.route('/append-data', methods=['GET'])
 def append_row_data():
-    single_row = build_single_row_data(scrapper)
-    append_row_to_gcs_file('stockmarketindexai-sql', 'mock_sql.csv', single_row)
+    try:
+        single_row = build_single_row_data(scrapper)
+        append_row_to_gcs_file('stockmarketindexai-sql', 'mock_sql.csv', single_row)
+        return jsonify({"row_data": single_row}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":
