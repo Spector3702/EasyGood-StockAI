@@ -1,8 +1,11 @@
+import os
 import numpy as np
 import pandas as pd
 from datetime import datetime
 from linebot.models import TextSendMessage
 from joblib import load
+
+from gcs_helper import GcsHelper
 
 
 def send_message_linebot(line_bot_api, event, text):
@@ -37,6 +40,11 @@ def build_single_row_data(scrapper):
 
 
 def predict(model):
+     gcs_helper = GcsHelper()
+     file_path = 'data/mock_sql.csv'
+     os.makedirs('data', exist_ok=True)
+     gcs_helper.download_file_from_bucket('stockmarketindexai-sql', 'mock_sql.csv', file_path)
+
      df = pd.read_csv('data/mock_sql.csv')
      df = df.sort_values(by='date')
      latest_data = df.tail(2)
