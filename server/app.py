@@ -17,7 +17,7 @@ parser.add_argument("--driver", required=True, help="spceify path to chromedrive
 args = parser.parse_args()
 
 app = Flask(__name__)
-model = tf.keras.models.load_model('models/LSTM_v1.h5')
+model = tf.keras.models.load_model('models/LSTM_tomorrow.h5')
 scrapper = Scrapper(args.driver)
 
 line_bot_api = LineBotApi('6pQcNXYxqu0Kwiu4gfZcDtkt/qHcfApZ3s0DSGG+ISNWTSUv+I4p4YRWkOVHVngVFf68pWJ09p04yqZtJkfUu4OipzWrr0vwJGqC/nlMzTPq4bPutXzBm/FUBgtMab67e+KfxlW0MR1aE/bAdxlbvQdB04t89/1O/w1cDnyilFU=')

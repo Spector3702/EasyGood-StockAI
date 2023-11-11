@@ -17,7 +17,7 @@ def build_single_row_data(scrapper):
      jpy = scrapper.get_JPY_Index_data()
      return {
           "date": datetime.now().strftime("%Y/%m/%d"),
-          "大盤_開盤價": twii['開盤'], "大盤_最高價": twii['最高'], "大盤_最低價": twii['最低'], "大盤_收盤價": twii['收盤'],
+          "大盤_開盤價": twii['開盤'], "大盤_最高價": twii['最高'], "大盤_最低價": twii['最低'], "大盤_收盤價": twii['收盤'], "大盤_成交量": twii['成交金額(億)'],
           "自營商": tw_future['自營商'], "投信": tw_future['投信'], "外資": tw_future['外資'],
           "費半_開盤價": sox['開盤'], "費半_最高價": sox['最高'], "費半_最低價": sox['最低'], "費半_收盤價": sox['收盤'],
           "台積_開盤價": tsmc['開盤'], "台積_最高價": tsmc['最高'], "台積_最低價": tsmc['最低'], "台積_收盤價": tsmc['收盤'],
