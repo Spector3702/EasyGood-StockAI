@@ -1,8 +1,5 @@
-import pandas as pd
 from datetime import datetime
 from linebot.models import TextSendMessage
-
-from gcs_helper import GcsHelper
 
 
 def send_message_linebot(line_bot_api, event, text):
@@ -27,17 +24,6 @@ def build_single_row_data(scrapper):
           "美元_開盤價": usd['開盤'], "美元_最高價": usd['最高'], "美元_最低價": usd['最低'], "美元_收盤價": usd['指數'],
           "日圓_開盤價": jpy['開盤'], "日圓_最高價": jpy['最高'], "日圓_最低價": jpy['最低'], "日圓_收盤價": jpy['指數']
      }
-
-
-def append_row_to_gcs_file(bucket_name, blob_name, row_data):
-     file_path = 'data/mock_sql.csv'
-     gcs_helper = GcsHelper()
-     gcs_helper.download_file_from_bucket(bucket_name, blob_name, file_path)
-
-     df = pd.DataFrame([row_data])
-     df.to_csv('data\mock_sql.csv', index=False, header=True)
-
-     gcs_helper.upload_file_to_bucket(bucket_name, blob_name, file_path)
 
 
 def predict(model):

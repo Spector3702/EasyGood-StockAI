@@ -1,3 +1,4 @@
+import pandas as pd
 from google.auth.exceptions import DefaultCredentialsError
 from google.cloud import storage
 
@@ -25,25 +26,12 @@ class GcsHelper:
         blob = bucket.blob(blob_name)
         blob.download_to_filename(path_to_file)
 
-    def rename_blob(self, bucket_name, blob_name, new_blob_name):
-        bucket = self.client.get_bucket(bucket_name)
-        blob = bucket.get_blob(blob_name)
-        bucket.rename_blob(blob, new_blob_name)
+    def append_row_to_gcs_file(self, bucket_name, blob_name, row_data):
+        file_path = 'data/mock_sql.csv'
+        self.download_file_from_bucket(bucket_name, blob_name, file_path)
 
-    def copy_blob(self, bucket_name, blob_name, new_bucket_name, new_blob_name):
-        source_bucket = self.client.get_bucket(bucket_name)
-        source_blob = source_bucket.get_blob(blob_name)
-        destination_bucket = self.client.get_bucket(new_bucket_name)
-        new_blob = destination_bucket.copy_blob(
-            source_blob, destination_bucket, new_blob_name)
+        df = pd.DataFrame([row_data])
+        df.to_csv('data\mock_sql.csv', index=False, header=True)
 
-    def delete_blob(self, bucket_name, blob_name):
-        bucket = self.client.get_bucket(bucket_name)
-        blob = bucket.get_blob(blob_name)
-        blob.delete()
-
-    def check_blob_exists(self, bucket_name, blob_name):
-        bucket = self.client.get_bucket(bucket_name)
-        is_blob_exists = bucket.get_blob(blob_name)
-        return is_blob_exists is not None
+        self.upload_file_to_bucket(bucket_name, blob_name, file_path)
     

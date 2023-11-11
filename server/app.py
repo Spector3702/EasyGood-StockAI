@@ -8,7 +8,8 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
 
 from scraper import Scrapper
-from utils import predict, send_message_linebot, build_single_row_data, append_row_to_gcs_file
+from gcs_helper import GcsHelper
+from utils import predict, send_message_linebot, build_single_row_data
 
 
 parser = argparse.ArgumentParser()
@@ -134,12 +135,10 @@ def get_JPY_today():
 
 @app.route('/append-data', methods=['GET'])
 def append_row_data():
-    try:
-        single_row = build_single_row_data(scrapper)
-        append_row_to_gcs_file('stockmarketindexai-sql', 'mock_sql.csv', single_row)
-        return jsonify({"row_data": single_row}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    single_row = build_single_row_data(scrapper)
+    gcs_helper = GcsHelper()
+    gcs_helper.append_row_to_gcs_file('stockmarketindexai-sql', 'mock_sql.csv', single_row)
+    return jsonify(single_row)
 
 
 if __name__ == "__main__":
