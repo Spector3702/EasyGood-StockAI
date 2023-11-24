@@ -109,6 +109,12 @@ def get_TW_Future_today():
     return jsonify(data)
 
 
+@app.route('/get-TW-FITX', methods=['GET'])
+def get_TW_FITX_today():
+    data = scrapper.get_TW_FITX_data()
+    return jsonify(data)
+
+
 @app.route('/get-SOX', methods=['GET'])
 def get_SOX_today():
     data = scrapper.get_SOX_data()

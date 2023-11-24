@@ -70,6 +70,26 @@ class Scrapper():
 
         return data
     
+    def get_TW_FITX_data(self):
+        url = "https://histock.tw/index-tw/FITX"
+        tree = self.get_content_tree(url)
+
+        xpaths = {
+            "現在": '//span[@id="Price1_lbTPrice"]/span[@class="clr-gr"]',
+            "開盤": "//div[@class='chartInfo_DayK']//div[contains(text(), '開盤')]/following-sibling::span",
+            "收盤": ''
+        }
+
+        data = {}
+        for key, path in xpaths.items():
+            element = tree.xpath(path)
+            if element:
+                data[key] = element[0].text_content().strip()
+            else:
+                print(f"No element found for XPath: {path}")
+
+        return data
+    
     def get_USD_Index_data(self):
         url = "https://www.stockq.org/forex/USDTWD.php"
         tree = self.get_content_tree(url)
