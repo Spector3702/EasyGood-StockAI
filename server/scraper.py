@@ -34,7 +34,8 @@ class Scrapper():
             "開盤": "//li[contains(@class, 'price-detail-item')]//span[contains(text(), '開盤')]/following-sibling::span",
             "最高": "//li[contains(@class, 'price-detail-item')]//span[contains(text(), '最高')]/following-sibling::span",
             "最低": "//li[contains(@class, 'price-detail-item')]//span[contains(text(), '最低')]/following-sibling::span",
-            "收盤": "//li[contains(@class, 'price-detail-item')]//span[contains(text(), '成交')]/following-sibling::span"
+            "收盤": "//li[contains(@class, 'price-detail-item')]//span[contains(text(), '成交')]/following-sibling::span",
+            "現在": "/html/body/div[1]/div/div/div/div/div[4]/div/div[1]/div/div[1]/div/div[2]/div[1]/div/span[1]"
         }
 
         data = {}
