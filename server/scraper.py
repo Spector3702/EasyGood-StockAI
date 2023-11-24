@@ -72,19 +72,22 @@ class Scrapper():
     
     def get_TW_FITX_data(self):
         url = "https://histock.tw/index-tw/FITX"
-        tree = self.get_content_tree(url)
+        self.driver.get(url)
 
         xpaths = {
-            "現在": '//span[@id="Price1_lbTPrice"]/span[@class="clr-gr"]',
-            "開盤": "//div[@class='chartInfo_DayK']//div[contains(text(), '開盤')]/following-sibling::span",
-            "收盤": ''
+            "開盤": "/html/body/form/div[4]/div[5]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div/ul/li[2]/div[2]/span",
+            "收盤": "/html/body/form/div[4]/div[5]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div/ul/li[5]/div[2]/span",
+            "現在": "/html/body/form/div[4]/div[3]/div/div[1]/div[1]/div[2]/div[1]/div[2]/ul/li[1]/span/span/span"
         }
 
         data = {}
         for key, path in xpaths.items():
-            element = tree.xpath(path)
-            if element:
-                data[key] = element[0].text_content().strip()
+            input_element = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, path))
+            )
+            if input_element:
+                text_content = input_element.text
+                data[key] = text_content
             else:
                 print(f"No element found for XPath: {path}")
 
