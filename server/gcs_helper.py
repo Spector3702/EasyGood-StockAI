@@ -35,7 +35,8 @@ class GcsHelper:
         if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
             df = pd.read_csv(file_path)
             if row_data['date'] not in df['date'].values:
-                df = df.append(row_data, ignore_index=True)
+                row_data_df = pd.DataFrame([row_data])
+                df = pd.concat([df, row_data_df], ignore_index=True)
         else:
             df = pd.DataFrame([row_data])
 
