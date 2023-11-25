@@ -44,8 +44,8 @@ def build_gru_row_data(scrapper):
      index = scrapper.get_TWII_data()
      return {
           "date": datetime.now().strftime("%Y/%m/%d"),
-          "future_9": future['開盤'], "future_10": future['現在'], "future_2": future['收盤'],
-          "index_9": index['開盤'], "index_10": index['現在'], "index_2": index['收盤']
+          "future_9": to_float(future['開盤']), "future_10": to_float(future['現在']), "future_2": to_float(future['收盤']),
+          "index_9": to_float(index['開盤']), "index_10": to_float(index['現在']), "index_2": to_float(index['收盤'])
      }
 
 
