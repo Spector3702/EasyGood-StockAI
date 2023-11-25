@@ -9,7 +9,7 @@ from linebot.models import *
 
 from scraper import Scrapper
 from gcs_helper import GcsHelper
-from utils import predict, send_message_linebot, build_single_row_data
+from utils import lstm_predict, send_message_linebot, build_lstm_row_data, build_gru_row_data
 
 
 parser = argparse.ArgumentParser()
@@ -45,8 +45,8 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    if event.message.text.lower() == "predict":
-        reply_text = predict(model)
+    if event.message.text.lower() == "after-hour predict":
+        reply_text = lstm_predict(model)
 
     elif event.message.text.lower() == "twii":
         send_message_linebot(line_bot_api, event, '正在查詢大盤指數...')
@@ -92,9 +92,9 @@ def handle_message(event):
     send_message_linebot(line_bot_api, event, reply_text)
 
 
-@app.route('/predict', methods=['GET'])
+@app.route('/lstm-predict', methods=['GET'])
 def predict_endpoint():
-     return {"prediction": predict(model)}
+     return {"prediction": lstm_predict(model)}
 
 
 @app.route('/get-TWII', methods=['GET'])
@@ -139,11 +139,19 @@ def get_JPY_today():
     return jsonify(data)
 
 
-@app.route('/append-data', methods=['GET'])
-def append_row_data():
-    single_row = build_single_row_data(scrapper)
+@app.route('/append-lstm-data', methods=['GET'])
+def append_lstm_row_data():
+    single_row = build_lstm_row_data(scrapper)
     gcs_helper = GcsHelper()
-    gcs_helper.append_row_to_gcs_file('stockmarketindexai-sql', 'mock_sql.csv', single_row)
+    gcs_helper.append_row_to_gcs_file('stockmarketindexai-sql', 'lstm_sql.csv', single_row)
+    return jsonify(single_row)
+
+
+@app.route('/append-gru-data', methods=['GET'])
+def append_gru_row_data():
+    single_row = build_gru_row_data(scrapper)
+    gcs_helper = GcsHelper()
+    gcs_helper.append_row_to_gcs_file('stockmarketindexai-sql', 'gru_sql.csv', single_row)
     return jsonify(single_row)
 
 

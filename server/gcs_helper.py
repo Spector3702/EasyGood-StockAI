@@ -28,7 +28,7 @@ class GcsHelper:
         blob.download_to_filename(path_to_file)
 
     def append_row_to_gcs_file(self, bucket_name, blob_name, row_data):
-        file_path = 'data/mock_sql.csv'
+        file_path = os.path.join('data', blob_name)
         os.makedirs('data', exist_ok=True)
         self.download_file_from_bucket(bucket_name, blob_name, file_path)
 

@@ -21,7 +21,7 @@ def to_float(s):
     return float(s)
 
 
-def build_single_row_data(scrapper):
+def build_lstm_row_data(scrapper):
      twii = scrapper.get_TWII_data()
      tw_future = scrapper.get_TW_Future_data()
      sox = scrapper.get_SOX_data()
@@ -39,17 +39,33 @@ def build_single_row_data(scrapper):
      }
 
 
-def predict(model):
-     gcs_helper = GcsHelper()
-     file_path = 'data/mock_sql.csv'
-     os.makedirs('data', exist_ok=True)
-     gcs_helper.download_file_from_bucket('stockmarketindexai-sql', 'mock_sql.csv', file_path)
+def build_gru_row_data(scrapper):
+     future = scrapper.get_TW_FITX_data()
+     index = scrapper.get_TWII_data()
+     return {
+          "date": datetime.now().strftime("%Y/%m/%d"),
+          "future_9": future['開盤'], "future_10": future['現在'], "future_2": future['收盤'],
+          "index_9": index['開盤'], "index_10": index['現在'], "index_2": index['收盤']
+     }
 
-     df = pd.read_csv('data/mock_sql.csv')
+
+def load_mock_sql(blob_name):
+     gcs_helper = GcsHelper()
+     file_path = os.path.join('data', blob_name)
+     os.makedirs('data', exist_ok=True)
+     gcs_helper.download_file_from_bucket('stockmarketindexai-sql', blob_name, file_path)
+
+     df = pd.read_csv(file_path)
      df = df.sort_values(by='date')
+
+     return df
+
+
+def lstm_predict(model):
+     df = load_mock_sql('data/lstm_sql.csv', 'lstm_sql.csv')
      latest_data = df.tail(2)
 
-     scaler = load('models/scaler.joblib')
+     scaler = load('models/lstm_scaler.joblib')
      latest_data_scaled = scaler.transform(latest_data.drop(['date'], axis=1))
 
      X_predict = latest_data_scaled.reshape(1, latest_data_scaled.shape[0], latest_data_scaled.shape[1])
@@ -63,5 +79,37 @@ def predict(model):
      dummy_array[0, target_index] = prediction[0][0]
      prediction_denormalized = scaler.inverse_transform(dummy_array)[0, target_index]
 
-     reply_text = f"Predicted value: {prediction_denormalized:.2f}"
+     reply_text = f"Predicted tomorrow's close index: {prediction_denormalized:.2f}"
+     return reply_text
+
+
+def gru_predict(model):
+     df = load_mock_sql('data/gru_sql.csv', 'gru_sql.csv')
+     latest_data = df.tail(3)
+
+     scaler = load('models/gru_scaler.joblib')
+     data_scaled = scaler.transform(latest_data, axis=1)
+
+     idx_index_2pm = df.columns.get_loc('index_2')
+     X_predict = [
+        data_scaled[-3, idx_index_2pm],                   # 2 days ago's index 2pm
+        data_scaled[-3, df.columns.get_loc('future_2')],  # 2 days ago's future 2pm
+        data_scaled[-2, idx_index_2pm],                   # yesterday's index 2pm
+        data_scaled[-2, df.columns.get_loc('future_2')],  # yesterday's future 2pm
+        data_scaled[-1, df.columns.get_loc('index_9')],   # today's index 9am
+        data_scaled[-1, df.columns.get_loc('future_9')],  # today's future 9am
+        data_scaled[-1, df.columns.get_loc('index_10')],  # today's index 10am
+        data_scaled[-1, df.columns.get_loc('future_10')]  # today's future 10am
+    ]
+     X_predict = np.array(X_predict).reshape(1, -1)
+
+     prediction = model.predict(X_predict)
+
+     # Construct a dummy array for inverse transformation
+     dummy_array = np.zeros(data_scaled.shape[1])
+     dummy_array[idx_index_2pm] = prediction[0]
+     prediction_denormalized = scaler.inverse_transform([dummy_array])[0, idx_index_2pm]
+
+     # Construct the reply
+     reply_text = f"Predicted today's close index: {prediction_denormalized:.2f}"
      return reply_text
