@@ -9,7 +9,7 @@ from linebot.models import *
 
 from scraper import Scrapper
 from gcs_helper import GcsHelper
-from utils import lstm_predict, send_message_linebot, build_lstm_row_data, build_gru_row_data
+from utils import lstm_predict, gru_predict, send_message_linebot, build_lstm_row_data, build_gru_row_data
 
 
 parser = argparse.ArgumentParser()
@@ -17,7 +17,6 @@ parser.add_argument("--driver", required=True, help="spceify path to chromedrive
 args = parser.parse_args()
 
 app = Flask(__name__)
-model = tf.keras.models.load_model('models/LSTM_tomorrow.h5')
 scrapper = Scrapper(args.driver)
 
 line_bot_api = LineBotApi('6pQcNXYxqu0Kwiu4gfZcDtkt/qHcfApZ3s0DSGG+ISNWTSUv+I4p4YRWkOVHVngVFf68pWJ09p04yqZtJkfUu4OipzWrr0vwJGqC/nlMzTPq4bPutXzBm/FUBgtMab67e+KfxlW0MR1aE/bAdxlbvQdB04t89/1O/w1cDnyilFU=')
@@ -46,7 +45,14 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     if event.message.text.lower() == "after-hour predict":
-        reply_text = lstm_predict(model)
+        send_message_linebot(line_bot_api, event, '正在預測明日大盤收盤指數...')
+        lstm = tf.keras.models.load_model('models/LSTM_tomorrow.h5')
+        reply_text = lstm_predict(lstm)
+
+    elif event.message.text.lower() == "in-hour predict":
+        send_message_linebot(line_bot_api, event, '正在預測今日大盤收盤指數...')
+        gru = tf.keras.models.load_model('models/GRU_10am.h5')
+        reply_text = gru_predict(gru)
 
     elif event.message.text.lower() == "twii":
         send_message_linebot(line_bot_api, event, '正在查詢大盤指數...')
@@ -93,8 +99,15 @@ def handle_message(event):
 
 
 @app.route('/lstm-predict', methods=['GET'])
-def predict_endpoint():
-     return {"prediction": lstm_predict(model)}
+def predict_lstm_endpoint():
+    lstm = tf.keras.models.load_model('models/LSTM_tomorrow.h5')
+    return {"prediction": lstm_predict(lstm)}
+
+
+@app.route('/gru-predict', methods=['GET'])
+def predict_gru_endpoint():
+    gru = tf.keras.models.load_model('models/GRU_10am.h5')
+    return {"prediction": gru_predict(gru)}
 
 
 @app.route('/get-TWII', methods=['GET'])

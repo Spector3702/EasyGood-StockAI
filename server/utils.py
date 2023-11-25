@@ -62,11 +62,12 @@ def load_mock_sql(blob_name):
 
 
 def lstm_predict(model):
-     df = load_mock_sql('data/lstm_sql.csv', 'lstm_sql.csv')
+     df = load_mock_sql('lstm_sql.csv')
+     df = df.drop(['date'], axis=1)
      latest_data = df.tail(2)
 
      scaler = load('models/lstm_scaler.joblib')
-     latest_data_scaled = scaler.transform(latest_data.drop(['date'], axis=1))
+     latest_data_scaled = scaler.transform(latest_data)
 
      X_predict = latest_data_scaled.reshape(1, latest_data_scaled.shape[0], latest_data_scaled.shape[1])
      prediction = model.predict(X_predict)
@@ -84,11 +85,12 @@ def lstm_predict(model):
 
 
 def gru_predict(model):
-     df = load_mock_sql('data/gru_sql.csv', 'gru_sql.csv')
+     df = load_mock_sql('gru_sql.csv')
+     df = df.drop(['date'], axis=1)
      latest_data = df.tail(3)
 
      scaler = load('models/gru_scaler.joblib')
-     data_scaled = scaler.transform(latest_data, axis=1)
+     data_scaled = scaler.transform(latest_data)
 
      idx_index_2pm = df.columns.get_loc('index_2')
      X_predict = [
@@ -101,13 +103,13 @@ def gru_predict(model):
         data_scaled[-1, df.columns.get_loc('index_10')],  # today's index 10am
         data_scaled[-1, df.columns.get_loc('future_10')]  # today's future 10am
     ]
-     X_predict = np.array(X_predict).reshape(1, -1)
+     X_predict = np.array([X_predict])
 
      prediction = model.predict(X_predict)
 
      # Construct a dummy array for inverse transformation
      dummy_array = np.zeros(data_scaled.shape[1])
-     dummy_array[idx_index_2pm] = prediction[0]
+     dummy_array[idx_index_2pm] = prediction[0, 0]
      prediction_denormalized = scaler.inverse_transform([dummy_array])[0, idx_index_2pm]
 
      # Construct the reply
