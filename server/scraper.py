@@ -184,3 +184,25 @@ class Scrapper():
                 print(f"No element found for XPath: {path}")
 
         return data
+    
+    def get_stock_selection(self):
+        url = "https://histock.tw/%E5%8F%B0%E8%82%A1%E5%A4%A7%E7%9B%A4"
+        self.driver.get(url)
+
+        input_element_xpath = '//*[@id="form1"]/div[4]/div[5]/div[2]/div[2]/div[1]/div[2]/table'
+        input_element = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, input_element_xpath))
+        )
+
+        rows = input_element.find_elements(By.TAG_NAME, "tr")
+
+        data_dict = {}
+        for row in rows:
+            header = row.find_element(By.TAG_NAME, "th").text
+            cells = row.find_elements(By.TAG_NAME, "td")
+            cell_data = [cell.text for cell in cells]
+
+            # If there's only one td, store it directly; otherwise, store the list
+            data_dict[header] = cell_data[0] if len(cell_data) == 1 else cell_data
+
+        return data_dict

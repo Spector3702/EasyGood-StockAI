@@ -110,6 +110,12 @@ def predict_gru_endpoint():
     return {"prediction": gru_predict(gru)}
 
 
+@app.route('/get-stock-selection', methods=['GET'])
+def get_stock_selection_today():
+    data = scrapper.get_stock_selection()
+    return jsonify(data)
+
+
 @app.route('/get-TWII', methods=['GET'])
 def get_TWII_today():
     data = scrapper.get_TWII_data()
