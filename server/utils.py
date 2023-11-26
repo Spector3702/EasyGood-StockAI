@@ -63,11 +63,10 @@ def load_mock_sql(blob_name):
 
 def lstm_predict(model):
      df = load_mock_sql('lstm_sql.csv')
-     df = df.drop(['date'], axis=1)
      latest_data = df.tail(2)
 
      scaler = load('models/lstm_scaler.joblib')
-     latest_data_scaled = scaler.transform(latest_data)
+     latest_data_scaled = scaler.transform(latest_data.drop(['date'], axis=1))
 
      X_predict = latest_data_scaled.reshape(1, latest_data_scaled.shape[0], latest_data_scaled.shape[1])
      prediction = model.predict(X_predict)
