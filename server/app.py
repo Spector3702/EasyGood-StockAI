@@ -54,6 +54,56 @@ def handle_message(event):
         gru = tf.keras.models.load_model('models/GRU_10am.h5')
         reply_text = gru_predict(gru)
 
+    elif event.message.text.lower() == "5與20日均線死亡交叉":
+        send_message_linebot(line_bot_api, event, '正在查詢5與20日均線死亡交叉...')
+        data = scrapper.get_stock_selection()
+        reply_text = data['5與20日均線死亡交叉']
+
+    elif event.message.text.lower() == "5與20日均線黃金交叉":
+        send_message_linebot(line_bot_api, event, '正在查詢5與20日均線黃金交叉...')
+        data = scrapper.get_stock_selection()
+        reply_text = data['5與20日均線黃金交叉']
+
+    elif event.message.text.lower() == "多頭吞噬":
+        send_message_linebot(line_bot_api, event, '正在查詢多頭吞噬...')
+        data = scrapper.get_stock_selection()
+        reply_text = data['多頭吞噬']
+
+    elif event.message.text.lower() == "爆量長紅":
+        send_message_linebot(line_bot_api, event, '正在查詢爆量長紅...')
+        data = scrapper.get_stock_selection()
+        reply_text = data['爆量長紅']
+
+    elif event.message.text.lower() == "爆量長黑":
+        send_message_linebot(line_bot_api, event, '正在查詢爆量長黑...')
+        data = scrapper.get_stock_selection()
+        reply_text = data['爆量長黑']
+
+    elif event.message.text.lower() == "空頭吞噬":
+        send_message_linebot(line_bot_api, event, '正在查詢空頭吞噬...')
+        data = scrapper.get_stock_selection()
+        reply_text = data['空頭吞噬']
+
+    elif event.message.text.lower() == "突破季線":
+        send_message_linebot(line_bot_api, event, '正在查詢突破季線...')
+        data = scrapper.get_stock_selection()
+        reply_text = data['突破季線']
+
+    elif event.message.text.lower() == "突破整理區間":
+        send_message_linebot(line_bot_api, event, '正在查詢突破整理區間...')
+        data = scrapper.get_stock_selection()
+        reply_text = data['突破整理區間']
+
+    elif event.message.text.lower() == "跌破季線":
+        send_message_linebot(line_bot_api, event, '正在查詢跌破季線...')
+        data = scrapper.get_stock_selection()
+        reply_text = data['跌破季線']
+
+    elif event.message.text.lower() == "跌破整理區間":
+        send_message_linebot(line_bot_api, event, '正在查詢跌破整理區間...')
+        data = scrapper.get_stock_selection()
+        reply_text = data['跌破整理區間']
+
     elif event.message.text.lower() == "twii":
         send_message_linebot(line_bot_api, event, '正在查詢大盤指數...')
         data = scrapper.get_TWII_data()
