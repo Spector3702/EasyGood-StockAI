@@ -45,7 +45,7 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    linebot_ui_manager = LineBotUIManager()
+    linebot_ui_manager = LineBotUIManager(token, event)
     if event.message.text.lower() == "多方精選個股":
         linebot_ui_manager.build_template_1()
 
