@@ -48,104 +48,114 @@ def handle_message(event):
         send_message_linebot(line_bot_api, event, '正在預測明日大盤收盤指數...')
         lstm = tf.keras.models.load_model('models/LSTM_tomorrow.h5')
         reply_text = lstm_predict(lstm)
+        send_message_linebot(line_bot_api, event, reply_text)
 
     elif event.message.text.lower() == "in-hour predict":
         send_message_linebot(line_bot_api, event, '正在預測今日大盤收盤指數...')
         gru = tf.keras.models.load_model('models/GRU_10am.h5')
         reply_text = gru_predict(gru)
+        send_message_linebot(line_bot_api, event, reply_text)
 
     elif event.message.text.lower() == "5與20日均線死亡交叉":
         send_message_linebot(line_bot_api, event, '正在查詢5與20日均線死亡交叉...')
         data = scrapper.get_stock_selection()
         reply_text = data['5與20日均線死亡交叉']
+        send_message_linebot(line_bot_api, event, reply_text)
 
     elif event.message.text.lower() == "5與20日均線黃金交叉":
         send_message_linebot(line_bot_api, event, '正在查詢5與20日均線黃金交叉...')
         data = scrapper.get_stock_selection()
         reply_text = data['5與20日均線黃金交叉']
+        send_message_linebot(line_bot_api, event, reply_text)
 
     elif event.message.text.lower() == "多頭吞噬":
         send_message_linebot(line_bot_api, event, '正在查詢多頭吞噬...')
         data = scrapper.get_stock_selection()
         reply_text = data['多頭吞噬']
+        send_message_linebot(line_bot_api, event, reply_text)
 
     elif event.message.text.lower() == "爆量長紅":
         send_message_linebot(line_bot_api, event, '正在查詢爆量長紅...')
         data = scrapper.get_stock_selection()
         reply_text = data['爆量長紅']
+        send_message_linebot(line_bot_api, event, reply_text)
 
     elif event.message.text.lower() == "爆量長黑":
         send_message_linebot(line_bot_api, event, '正在查詢爆量長黑...')
         data = scrapper.get_stock_selection()
         reply_text = data['爆量長黑']
+        send_message_linebot(line_bot_api, event, reply_text)
 
     elif event.message.text.lower() == "空頭吞噬":
         send_message_linebot(line_bot_api, event, '正在查詢空頭吞噬...')
         data = scrapper.get_stock_selection()
         reply_text = data['空頭吞噬']
+        send_message_linebot(line_bot_api, event, reply_text)
 
     elif event.message.text.lower() == "突破季線":
         send_message_linebot(line_bot_api, event, '正在查詢突破季線...')
         data = scrapper.get_stock_selection()
         reply_text = data['突破季線']
+        send_message_linebot(line_bot_api, event, reply_text)
 
     elif event.message.text.lower() == "突破整理區間":
         send_message_linebot(line_bot_api, event, '正在查詢突破整理區間...')
         data = scrapper.get_stock_selection()
         reply_text = data['突破整理區間']
+        send_message_linebot(line_bot_api, event, reply_text)
 
     elif event.message.text.lower() == "跌破季線":
         send_message_linebot(line_bot_api, event, '正在查詢跌破季線...')
         data = scrapper.get_stock_selection()
         reply_text = data['跌破季線']
+        send_message_linebot(line_bot_api, event, reply_text)
 
     elif event.message.text.lower() == "跌破整理區間":
         send_message_linebot(line_bot_api, event, '正在查詢跌破整理區間...')
         data = scrapper.get_stock_selection()
         reply_text = data['跌破整理區間']
+        send_message_linebot(line_bot_api, event, reply_text)
 
     elif event.message.text.lower() == "twii":
         send_message_linebot(line_bot_api, event, '正在查詢大盤指數...')
         data = scrapper.get_TWII_data()
         reply_text = '\n'.join(f"{key}: {value}" for key, value in data.items())
+        send_message_linebot(line_bot_api, event, reply_text)
 
     elif event.message.text.lower() == "tw future":
         send_message_linebot(line_bot_api, event, '正在查詢三大法人...')
         data = scrapper.get_TW_Future_data()
         reply_text = '淨多單留倉(張):\n'
         reply_text += '\n'.join(f"{key}: {value}" for key, value in data.items())
+        send_message_linebot(line_bot_api, event, reply_text)
 
     elif event.message.text.lower() == "sox":
         send_message_linebot(line_bot_api, event, '正在查詢費半指數...')
         data = scrapper.get_SOX_data()
         reply_text = '您好，今日費半指數為:\n'
         reply_text += '\n'.join(f"{key}: {value}" for key, value in data.items())
+        send_message_linebot(line_bot_api, event, reply_text)
 
     elif event.message.text.lower() == "tsmc":
         send_message_linebot(line_bot_api, event, '正在查詢台積電指數...')
         data = scrapper.get_TSMC_data()
         reply_text = '您好，今日台積電股價為:\n'
         reply_text += '\n'.join(f"{key}: {value}" for key, value in data.items())
+        send_message_linebot(line_bot_api, event, reply_text)
 
     elif event.message.text.lower() == "usd":
         send_message_linebot(line_bot_api, event, '正在查詢美元匯率...')
         data = scrapper.get_USD_Index_data()
         reply_text = '您好，今日美元/台幣匯率為:\n'
         reply_text += '\n'.join(f"{key}: {value}" for key, value in data.items())
+        send_message_linebot(line_bot_api, event, reply_text)
 
     elif event.message.text.lower() == "jpy":
         send_message_linebot(line_bot_api, event, '正在查詢美元/日圓...')
         data = scrapper.get_JPY_Index_data()
         reply_text = '您好，今日美元/日幣匯率為:\n'
         reply_text += '\n'.join(f"{key}: {value}" for key, value in data.items())
-
-    else:
-        reply_text = event.message.text
-
-    if not isinstance(reply_text, str):
-        reply_text = str(reply_text)
-
-    send_message_linebot(line_bot_api, event, reply_text)
+        send_message_linebot(line_bot_api, event, reply_text)
 
 
 @app.route('/lstm-predict', methods=['GET'])
