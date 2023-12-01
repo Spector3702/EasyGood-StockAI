@@ -2,16 +2,9 @@ import os
 import numpy as np
 import pandas as pd
 from datetime import datetime
-from linebot.models import TextSendMessage
 from joblib import load
 
 from gcs_helper import GcsHelper
-
-
-def send_message_linebot(line_bot_api, event, text):
-     user_id = event.source.user_id
-     message = TextSendMessage(text=text)
-     line_bot_api.push_message(user_id, message)
 
 
 def to_float(s):
