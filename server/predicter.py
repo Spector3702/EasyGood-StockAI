@@ -63,8 +63,8 @@ class Predicter():
           df = load_mock_sql(csv_name)
           return model, scaler, df
 
-     def lstm_predict(self, model_path, scaler_path, csv_name):
-          model, scaler, df = self._prepare_prediction(model_path, scaler_path, csv_name)
+     def lstm_predict(self):
+          model, scaler, df = self._prepare_prediction('models/LSTM_tomorrow.h5', 'models/lstm_scaler.joblib', 'lstm_sql.csv')
           latest_data = df.tail(2)
           latest_data_scaled = scaler.transform(latest_data.drop(['date'], axis=1))
           X_predict = latest_data_scaled.reshape(1, latest_data_scaled.shape[0], latest_data_scaled.shape[1])
@@ -81,8 +81,8 @@ class Predicter():
           reply_text = f"Predicted tomorrow's close index: {prediction_denormalized:.2f}"
           return reply_text
 
-     def gru_predict(self, model_path, scaler_path, csv_name):
-          model, scaler, df = self._prepare_prediction(model_path, scaler_path, csv_name)
+     def gru_predict(self):
+          model, scaler, df = self._prepare_prediction('models/GRU_10am.h5', 'models/gru_scaler.joblib', 'gru_sql.csv')
           df = df.drop(['date'], axis=1)
           latest_data = df.tail(3)
           data_scaled = scaler.transform(latest_data)

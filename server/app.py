@@ -1,7 +1,6 @@
 import os
 import argparse
 import pytz
-import tensorflow as tf
 
 from flask import Flask, request, abort, jsonify
 from linebot import WebhookHandler
@@ -47,7 +46,7 @@ def handle_message(event):
     message_text = event.message.text.lower()
 
     if message_text == "多方精選個股":
-        linebot_manager.build_template_1()
+        linebot_manager.build_templates_1()
 
     elif message_text == "大盤預測":
         taiwan_time = pytz.timezone('Asia/Taipei')
@@ -57,10 +56,10 @@ def handle_message(event):
         # Check if current time is within 9:00 AM to 1:30 PM
         if current_time.hour >= 9 and (current_time.hour < 13 or (current_time.hour == 13 and current_time.minute <= 30)):
             linebot_manager.send_text_message('正在預測今日大盤收盤指數...')
-            reply_text = predicter.gru_predict('models/GRU_10am.h5', 'models/gru_scaler.joblib', 'gru_sql.csv')
+            reply_text = predicter.gru_predict()
         else:
             linebot_manager.send_text_message('正在預測明日大盤收盤指數...')
-            reply_text = predicter.lstm_predict('models/LSTM_tomorrow.h5', 'models/lstm_scaler.joblib', 'lstm_sql.csv')
+            reply_text = predicter.lstm_predict()
 
         linebot_manager.send_text_message(reply_text)
 
@@ -94,11 +93,8 @@ def handle_postback(event):
     linebot_manager = LineBotManager(token, event)
     postback_data = event.postback.data
 
-    if postback_data == '突破整理區間':
-        linebot_manager.send_text_message('正在查詢突破整理區間...')
-        data = scrapper.get_stock_selection()
-        reply_text = data['突破整理區間']
-        linebot_manager.send_text_message(reply_text)
+    if '1_' in postback_data:
+        linebot_manager.handle_templates_1(postback_data)
 
 
 @app.route('/append-lstm-data', methods=['GET'])

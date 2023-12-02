@@ -69,30 +69,37 @@ class LineBotManager():
             )
         )
 
-    def build_template_1(self):
+    def build_templates_1(self):
         titles = ['突破整理區間', '爆量長紅', '突破季線', '多頭吞噬', '5與20日均線黃金交叉']
         texts = ['突破整理區間', '爆量長紅', '突破季線', '多頭吞噬', '5與20日均線黃金交叉']
         actions = [
             [
-                PostbackAction(label='查詢', data='突破整理區間'),
+                PostbackAction(label='查詢', data='1_突破整理區間'),
                 URIAction(label='HiStock', uri='https://histock.tw/%E5%8F%B0%E8%82%A1%E5%A4%A7%E7%9B%A4')
             ],
             [
-                PostbackAction(label='查詢', data='爆量長紅'),
+                PostbackAction(label='查詢', data='1_爆量長紅'),
                 URIAction(label='HiStock', uri='https://histock.tw/%E5%8F%B0%E8%82%A1%E5%A4%A7%E7%9B%A4')
             ],
             [
-                PostbackAction(label='查詢', data='突破季線'),
+                PostbackAction(label='查詢', data='1_突破季線'),
                 URIAction(label='HiStock', uri='https://histock.tw/%E5%8F%B0%E8%82%A1%E5%A4%A7%E7%9B%A4')
             ],
             [
-                PostbackAction(label='查詢', data='多頭吞噬'),
+                PostbackAction(label='查詢', data='1_多頭吞噬'),
                 URIAction(label='HiStock', uri='https://histock.tw/%E5%8F%B0%E8%82%A1%E5%A4%A7%E7%9B%A4')
             ],
             [
-                PostbackAction(label='查詢', data='5與20日均線黃金交叉'),
+                PostbackAction(label='查詢', data='1_5與20日均線黃金交叉'),
                 URIAction(label='HiStock', uri='https://histock.tw/%E5%8F%B0%E8%82%A1%E5%A4%A7%E7%9B%A4')
             ]
         ]
 
         self.send_template(titles, texts, actions)
+
+    def handle_templates_1(self, postback_data, scrapper):
+        key = postback_data.split('1_', 1)[1] if '1_' in postback_data else None
+        self.send_text_message(f'正在查詢{key}...')
+        data = scrapper.get_stock_selection()
+        reply_text = data['爆量長紅']
+        self.send_text_message(reply_text)
