@@ -1,30 +1,9 @@
-import os
 import numpy as np
-import pandas as pd
 import tensorflow as tf
 from datetime import datetime
 from joblib import load
 
-from gcs_helper import GcsHelper
-
-
-def to_float(s):
-    if isinstance(s, str):
-        s = s.replace(',', '')
-        return float(s) if s != '-' else -1.0
-    return float(s)
-
-
-def load_mock_sql(blob_name):
-     gcs_helper = GcsHelper()
-     file_path = os.path.join('data', blob_name)
-     os.makedirs('data', exist_ok=True)
-     gcs_helper.download_file_from_bucket('stockmarketindexai-sql', blob_name, file_path)
-
-     df = pd.read_csv(file_path)
-     df = df.sort_values(by='date')
-
-     return df
+from utils import to_float, load_mock_sql
 
 
 class Predicter():

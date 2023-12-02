@@ -1,5 +1,8 @@
+import os
 from linebot import LineBotApi
 from linebot.models import *
+
+from utils import load_mock_sql
 
 
 class LineBotManager():
@@ -155,7 +158,7 @@ class LineBotManager():
 
     def handle_templates_4(self, postback_data, scrapper):
         if postback_data == '4_美/台':
-            self.send_text_message('正在查詢美元匯率...')
+            self.send_text_message('正在查詢美元/台幣...')
             data = scrapper.get_USD_Index_data()
             reply_text = '您好，今日美元/台幣匯率為:\n'
             reply_text += '\n'.join(f"{key}: {value}" for key, value in data.items())
@@ -166,3 +169,34 @@ class LineBotManager():
             reply_text += '\n'.join(f"{key}: {value}" for key, value in data.items())
             
         self.send_text_message(reply_text)
+
+    def build_templates_5(self):
+        titles = ['外資', '投信', '自營商']
+        texts = ['外資', '投信', '自營商']
+        actions = [
+            [
+                PostbackAction(label='查詢', data='5_外資')
+            ],
+            [
+                PostbackAction(label='查詢', data='5_投信')
+            ],
+            [
+                PostbackAction(label='查詢', data='5_自營商')
+            ]
+        ]
+
+        self.send_template(titles, texts, actions)
+
+    def handle_templates_5(self, postback_data):
+        key = postback_data.split('5_', 1)[1] if '5_' in postback_data else None
+        df = load_mock_sql('lstm_sql.csv')
+        latest_data = df.loc[:2, ['date', key]]
+        reply_text = f'您好，近三日{key}期貨未平倉為:\n'
+
+        for _, row in latest_data.iterrows():
+            date = row['date']
+            value = row[key]
+            reply_text += f"{date}: {value}\n"
+
+        self.send_text_message(reply_text)
+        
