@@ -94,7 +94,7 @@ def handle_postback(event):
     postback_data = event.postback.data
 
     if '1_' in postback_data:
-        linebot_manager.handle_templates_1(postback_data)
+        linebot_manager.handle_templates_1(postback_data, scrapper)
 
 
 @app.route('/append-lstm-data', methods=['GET'])
