@@ -198,5 +198,34 @@ class LineBotManager():
             value = row[key]
             reply_text += f"{date}: {value}\n"
 
+        reply_text = reply_text.rstrip('\n')
+        self.send_text_message(reply_text)
+
+    def build_templates_6(self):
+        titles = ['美股四大指數']
+        texts = ['美股四大指數']
+        actions = [
+            [
+                PostbackAction(label='查詢', data='6_費半')
+                # PostbackAction(label='查詢', data='6_S&P500'),
+                # PostbackAction(label='查詢', data='6_那斯達克'),
+                # PostbackAction(label='查詢', data='6_道瓊')
+            ]
+        ]
+
+        self.send_template(titles, texts, actions)
+
+    def handle_templates_6(self, postback_data):
+        key = postback_data.split('6_', 1)[1] if '6_' in postback_data else None
+        df = load_mock_sql('lstm_sql.csv')
+        latest_data = df.iloc[-3:][['date', key]]
+        reply_text = f'您好，近三日{key}指數為:\n'
+
+        for _, row in latest_data.iterrows():
+            date = row['date']
+            value = row[key]
+            reply_text += f"{date}: {value}\n"
+
+        reply_text = reply_text.rstrip('\n')
         self.send_text_message(reply_text)
         

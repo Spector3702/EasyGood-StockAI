@@ -73,10 +73,7 @@ def handle_message(event):
         linebot_manager.build_templates_5()
 
     elif message_text == "美股四大指數":
-        linebot_manager.send_text_message('正在查詢爆量長紅...')
-        data = scrapper.get_stock_selection()
-        reply_text = data['爆量長紅']
-        linebot_manager.send_text_message(reply_text)
+        linebot_manager.build_templates_6()
 
 
 @handler.add(PostbackEvent)
@@ -92,6 +89,8 @@ def handle_postback(event):
         linebot_manager.handle_templates_4(postback_data, scrapper)
     elif '5_' in postback_data:
         linebot_manager.handle_templates_5(postback_data)
+    elif '6_' in postback_data:
+        linebot_manager.handle_templates_6(postback_data)
 
 
 @app.route('/append-lstm-data', methods=['GET'])
