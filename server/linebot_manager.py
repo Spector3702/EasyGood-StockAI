@@ -101,5 +101,5 @@ class LineBotManager():
         key = postback_data.split('1_', 1)[1] if '1_' in postback_data else None
         self.send_text_message(f'正在查詢{key}...')
         data = scrapper.get_stock_selection()
-        reply_text = data['爆量長紅']
+        reply_text = data.get(key, '找不到相關資料')
         self.send_text_message(reply_text)
