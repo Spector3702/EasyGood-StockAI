@@ -4,6 +4,9 @@ A project which deployed a AI server in Cloud Run, and interact with Line Messag
 
 ## Quick Start
 
+### Join Line Bot
+![Alt text](docs/qrcode.png)
+
 ### Requirements
 
 * [ChromeDriver](https://googlechromelabs.github.io/chrome-for-testing/)
@@ -24,7 +27,7 @@ python server\app.py --driver '{PATH_TO_CHROMEDRIVER}'
 ## About StockMarketIndexAI
 
 ### Structure
-![Alt text](docs/image.png)
+![Alt text](docs/structure.png)
 
 
 ### Code Structure

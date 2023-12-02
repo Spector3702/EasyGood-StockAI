@@ -1,4 +1,3 @@
-import os
 from linebot import LineBotApi
 from linebot.models import *
 
@@ -143,21 +142,21 @@ class LineBotManager():
         self.send_text_message(reply_text)
 
     def build_templates_4(self):
-        titles = ['美/台', '美/日']
-        texts = ['美/台', '美/日']
+        titles = ['美元/台幣', '美元/日圓']
+        texts = ['美元/台幣', '美元/日圓']
         actions = [
             [
-                PostbackAction(label='查詢', data='4_美/台')
+                PostbackAction(label='查詢', data='4_美元/台幣')
             ],
             [
-                PostbackAction(label='查詢', data='4_美/日')
+                PostbackAction(label='查詢', data='4_美元/日圓')
             ]
         ]
 
         self.send_template(titles, texts, actions)
 
     def handle_templates_4(self, postback_data, scrapper):
-        if postback_data == '4_美/台':
+        if postback_data == '4_美元/台幣':
             self.send_text_message('正在查詢美元/台幣...')
             data = scrapper.get_USD_Index_data()
             reply_text = '您好，今日美元/台幣匯率為:\n'
