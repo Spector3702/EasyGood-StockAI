@@ -9,7 +9,7 @@ from linebot.models import *
 
 from scraper import Scrapper
 from gcs_helper import GcsHelper
-from linebot_ui import LineBotUIManager
+from linebot_manager import LineBotManager
 from utils import lstm_predict, gru_predict, build_lstm_row_data, build_gru_row_data
 
 
@@ -27,14 +27,10 @@ handler = WebhookHandler('ecfb9d5eefbcbb9f678a79a25af244d3')
 
 @app.route("/callback", methods=['POST'])
 def callback():
-    # get X-Line-Signature header value
     signature = request.headers['X-Line-Signature']
-
-    # get request body as text
     body = request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
 
-    # handle webhook body
     try:
         handler.handle(body, signature)
     except InvalidSignatureError:
@@ -45,39 +41,55 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    linebot_ui_manager = LineBotUIManager(token, event)
-    if event.message.text.lower() == "多方精選個股":
-        linebot_ui_manager.build_template_1()
+    linebot_manager = LineBotManager(token, event)
+    message_text = event.message.text.lower()
 
-    elif event.message.text.lower() == "大盤預測":
-        linebot_ui_manager.send_text_message(token, event, '正在預測今日大盤收盤指數...')
+    if message_text == "多方精選個股":
+        linebot_manager.build_template_1()
+
+    elif message_text == "大盤預測":
+        linebot_manager.send_text_message('正在預測今日大盤收盤指數...')
         gru = tf.keras.models.load_model('models/GRU_10am.h5')
         reply_text = gru_predict(gru)
-        linebot_ui_manager.send_text_message(token, event, reply_text)
+        linebot_manager.send_text_message(reply_text)
 
-    elif event.message.text.lower() == "空方精選個股":
-        linebot_ui_manager.send_text_message(token, event, '正在查詢5與20日均線死亡交叉...')
+    elif message_text == "空方精選個股":
+        linebot_manager.send_text_message('正在查詢5與20日均線死亡交叉...')
         data = scrapper.get_stock_selection()
         reply_text = data['5與20日均線死亡交叉']
-        linebot_ui_manager.send_text_message(token, event, reply_text)
+        linebot_manager.send_text_message(reply_text)
 
-    elif event.message.text.lower() == "外匯市場":
-        linebot_ui_manager.send_text_message(token, event, '正在查詢5與20日均線黃金交叉...')
+    elif message_text == "外匯市場":
+        linebot_manager.send_text_message('正在查詢5與20日均線黃金交叉...')
         data = scrapper.get_stock_selection()
         reply_text = data['5與20日均線黃金交叉']
-        linebot_ui_manager.send_text_message(token, event, reply_text)
+        linebot_manager.send_text_message(reply_text)
 
-    elif event.message.text.lower() == "期貨未平倉":
-        linebot_ui_manager.send_text_message(token, event, '正在查詢多頭吞噬...')
+    elif message_text == "期貨未平倉":
+        linebot_manager.send_text_message('正在查詢多頭吞噬...')
         data = scrapper.get_stock_selection()
         reply_text = data['多頭吞噬']
-        linebot_ui_manager.send_text_message(token, event, reply_text)
+        linebot_manager.send_text_message(reply_text)
 
-    elif event.message.text.lower() == "美股四大指數":
-        linebot_ui_manager.send_text_message(token, event, '正在查詢爆量長紅...')
+    elif message_text == "美股四大指數":
+        linebot_manager.send_text_message('正在查詢爆量長紅...')
         data = scrapper.get_stock_selection()
         reply_text = data['爆量長紅']
-        linebot_ui_manager.send_text_message(token, event, reply_text)
+        linebot_manager.send_text_message(reply_text)
+
+
+@handler.add(PostbackEvent)
+def handle_postback(event):
+    linebot_manager = LineBotManager(token, event)
+    postback_data = event.postback.data
+
+    if postback_data == '突破整理區間':
+        linebot_manager.send_text_message('正在查詢突破整理區間...')
+        data = scrapper.get_stock_selection()
+        reply_text = data['突破整理區間']
+        linebot_manager.send_text_message(reply_text)
+
+
 
 
 @app.route('/append-lstm-data', methods=['GET'])

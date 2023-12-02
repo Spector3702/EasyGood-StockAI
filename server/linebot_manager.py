@@ -2,7 +2,7 @@ from linebot import LineBotApi
 from linebot.models import *
 
 
-class LineBotUIManager():
+class LineBotManager():
     def __init__(self, token, event):
         self.line_bot_api = LineBotApi(token)
         self.user_id = event.source.user_id
