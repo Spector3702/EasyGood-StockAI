@@ -232,7 +232,13 @@ class LineBotManager():
             high_price = row[f'{key}_最高價']
             low_price = row[f'{key}_最低價']
             close_price = row[f'{key}_收盤價']
-            reply_text += f"{date}: 開盤價 {open_price}, 最高價 {high_price}, 最低價 {low_price}, 收盤價 {close_price}\n"
+            reply_text += (
+                f"{date}:\n"
+                f"  - 開盤價 {open_price}\n"
+                f"  - 最高價 {high_price}\n"
+                f"  - 最低價 {low_price}\n"
+                f"  - 收盤價 {close_price}\n"
+            )
 
         reply_text = reply_text.rstrip('\n')
         self.send_text_message(reply_text)
