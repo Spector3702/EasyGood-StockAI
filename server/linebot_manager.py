@@ -189,6 +189,8 @@ class LineBotManager():
 
     def handle_templates_5(self, postback_data):
         key = postback_data.split('5_', 1)[1] if '5_' in postback_data else None
+        self.send_text_message(f'正在查詢{key}期貨未平倉...')
+        
         df = load_mock_sql('lstm_sql.csv')
         latest_data = df.iloc[-3:][['date', key]]
         reply_text = f'您好，近三日{key}期貨未平倉為:\n'
@@ -206,7 +208,7 @@ class LineBotManager():
         texts = ['美股四大指數']
         actions = [
             [
-                PostbackAction(label='查詢', data='6_費半')
+                PostbackAction(label='費半', data='6_費半')
                 # PostbackAction(label='查詢', data='6_S&P500'),
                 # PostbackAction(label='查詢', data='6_那斯達克'),
                 # PostbackAction(label='查詢', data='6_道瓊')
@@ -217,14 +219,20 @@ class LineBotManager():
 
     def handle_templates_6(self, postback_data):
         key = postback_data.split('6_', 1)[1] if '6_' in postback_data else None
+        self.send_text_message(f'正在查詢{key}指數...')
+
         df = load_mock_sql('lstm_sql.csv')
-        latest_data = df.iloc[-3:][['date', key]]
+        columns = ['date', f'{key}_開盤價', f'{key}_最高價', f'{key}_最低價', f'{key}_收盤價']
+        latest_data = df.iloc[-3:][columns]
         reply_text = f'您好，近三日{key}指數為:\n'
 
         for _, row in latest_data.iterrows():
             date = row['date']
-            value = row[key]
-            reply_text += f"{date}: {value}\n"
+            open_price = row[f'{key}_開盤價']
+            high_price = row[f'{key}_最高價']
+            low_price = row[f'{key}_最低價']
+            close_price = row[f'{key}_收盤價']
+            reply_text += f"{date}: 開盤價 {open_price}, 最高價 {high_price}, 最低價 {low_price}, 收盤價 {close_price}\n"
 
         reply_text = reply_text.rstrip('\n')
         self.send_text_message(reply_text)
