@@ -1,16 +1,18 @@
 import os
 import argparse
+import pytz
 import tensorflow as tf
 
 from flask import Flask, request, abort, jsonify
-from linebot import LineBotApi, WebhookHandler
+from linebot import WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
+from datetime import datetime
 
 from scraper import Scrapper
 from gcs_helper import GcsHelper
 from linebot_manager import LineBotManager
-from utils import lstm_predict, gru_predict, build_lstm_row_data, build_gru_row_data
+from predicter import Predicter
 
 
 parser = argparse.ArgumentParser()
@@ -48,9 +50,18 @@ def handle_message(event):
         linebot_manager.build_template_1()
 
     elif message_text == "大盤預測":
-        linebot_manager.send_text_message('正在預測今日大盤收盤指數...')
-        gru = tf.keras.models.load_model('models/GRU_10am.h5')
-        reply_text = gru_predict(gru)
+        taiwan_time = pytz.timezone('Asia/Taipei')
+        current_time = datetime.now(taiwan_time)
+        predicter = Predicter(scrapper)
+
+        # Check if current time is within 9:00 AM to 1:30 PM
+        if current_time.hour >= 9 and (current_time.hour < 13 or (current_time.hour == 13 and current_time.minute <= 30)):
+            linebot_manager.send_text_message('正在預測今日大盤收盤指數...')
+            reply_text = predicter.gru_predict('models/GRU_10am.h5', 'models/gru_scaler.joblib', 'gru_sql.csv')
+        else:
+            linebot_manager.send_text_message('正在預測明日大盤收盤指數...')
+            reply_text = predicter.gru_predict('models/LSTM_tomorrow.h5', 'models/lstm_scaler.joblib', 'lstm_sql.csv')
+
         linebot_manager.send_text_message(reply_text)
 
     elif message_text == "空方精選個股":
@@ -90,11 +101,10 @@ def handle_postback(event):
         linebot_manager.send_text_message(reply_text)
 
 
-
-
 @app.route('/append-lstm-data', methods=['GET'])
 def append_lstm_row_data():
-    single_row = build_lstm_row_data(scrapper)
+    predicter = Predicter(scrapper)
+    single_row = predicter.build_lstm_row_data()
     gcs_helper = GcsHelper()
     gcs_helper.append_row_to_gcs_file('stockmarketindexai-sql', 'lstm_sql.csv', single_row)
     return jsonify(single_row)
@@ -102,7 +112,8 @@ def append_lstm_row_data():
 
 @app.route('/append-gru-data', methods=['GET'])
 def append_gru_row_data():
-    single_row = build_gru_row_data(scrapper)
+    predicter = Predicter(scrapper)
+    single_row = predicter.build_gru_row_data()
     gcs_helper = GcsHelper()
     gcs_helper.append_row_to_gcs_file('stockmarketindexai-sql', 'gru_sql.csv', single_row)
     return jsonify(single_row)
