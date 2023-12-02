@@ -103,3 +103,38 @@ class LineBotManager():
         data = scrapper.get_stock_selection()
         reply_text = data.get(key, '找不到相關資料')
         self.send_text_message(reply_text)
+
+    def build_templates_3(self):
+        titles = ['跌破整理區間', '爆量長黑', '跌破季線', '空頭吞噬', '5與20日均線死亡交叉']
+        texts = ['跌破整理區間', '爆量長黑', '跌破季線', '空頭吞噬', '5與20日均線死亡交叉']
+        actions = [
+            [
+                PostbackAction(label='查詢', data='3_跌破整理區間'),
+                URIAction(label='HiStock', uri='https://histock.tw/%E5%8F%B0%E8%82%A1%E5%A4%A7%E7%9B%A4')
+            ],
+            [
+                PostbackAction(label='查詢', data='3_爆量長黑'),
+                URIAction(label='HiStock', uri='https://histock.tw/%E5%8F%B0%E8%82%A1%E5%A4%A7%E7%9B%A4')
+            ],
+            [
+                PostbackAction(label='查詢', data='3_跌破季線'),
+                URIAction(label='HiStock', uri='https://histock.tw/%E5%8F%B0%E8%82%A1%E5%A4%A7%E7%9B%A4')
+            ],
+            [
+                PostbackAction(label='查詢', data='3_空頭吞噬'),
+                URIAction(label='HiStock', uri='https://histock.tw/%E5%8F%B0%E8%82%A1%E5%A4%A7%E7%9B%A4')
+            ],
+            [
+                PostbackAction(label='查詢', data='3_5與20日均線死亡交叉'),
+                URIAction(label='HiStock', uri='https://histock.tw/%E5%8F%B0%E8%82%A1%E5%A4%A7%E7%9B%A4')
+            ]
+        ]
+
+        self.send_template(titles, texts, actions)
+
+    def handle_templates_3(self, postback_data, scrapper):
+        key = postback_data.split('3_', 1)[1] if '3_' in postback_data else None
+        self.send_text_message(f'正在查詢{key}...')
+        data = scrapper.get_stock_selection()
+        reply_text = data.get(key, '找不到相關資料')
+        self.send_text_message(reply_text)

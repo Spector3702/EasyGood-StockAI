@@ -64,10 +64,7 @@ def handle_message(event):
         linebot_manager.send_text_message(reply_text)
 
     elif message_text == "空方精選個股":
-        linebot_manager.send_text_message('正在查詢5與20日均線死亡交叉...')
-        data = scrapper.get_stock_selection()
-        reply_text = data['5與20日均線死亡交叉']
-        linebot_manager.send_text_message(reply_text)
+        linebot_manager.build_templates_3()
 
     elif message_text == "外匯市場":
         linebot_manager.send_text_message('正在查詢5與20日均線黃金交叉...')
@@ -95,6 +92,8 @@ def handle_postback(event):
 
     if '1_' in postback_data:
         linebot_manager.handle_templates_1(postback_data, scrapper)
+    elif '3_' in postback_data:
+        linebot_manager.handle_templates_3(postback_data, scrapper)
 
 
 @app.route('/append-lstm-data', methods=['GET'])
