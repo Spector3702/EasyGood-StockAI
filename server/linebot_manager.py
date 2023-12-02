@@ -138,3 +138,31 @@ class LineBotManager():
         data = scrapper.get_stock_selection()
         reply_text = data.get(key, '找不到相關資料')
         self.send_text_message(reply_text)
+
+    def build_templates_4(self):
+        titles = ['美/台', '美/日']
+        texts = ['美/台', '美/日']
+        actions = [
+            [
+                PostbackAction(label='查詢', data='4_美/台')
+            ],
+            [
+                PostbackAction(label='查詢', data='4_美/日')
+            ]
+        ]
+
+        self.send_template(titles, texts, actions)
+
+    def handle_templates_4(self, postback_data, scrapper):
+        if postback_data == '4_美/台':
+            self.send_text_message('正在查詢美元匯率...')
+            data = scrapper.get_USD_Index_data()
+            reply_text = '您好，今日美元/台幣匯率為:\n'
+            reply_text += '\n'.join(f"{key}: {value}" for key, value in data.items())
+        else:
+            self.send_text_message('正在查詢美元/日圓...')
+            data = scrapper.get_JPY_Index_data()
+            reply_text = '您好，今日美元/日幣匯率為:\n'
+            reply_text += '\n'.join(f"{key}: {value}" for key, value in data.items())
+            
+        self.send_text_message(reply_text)
