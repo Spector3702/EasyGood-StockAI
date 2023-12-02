@@ -60,7 +60,7 @@ def handle_message(event):
             reply_text = predicter.gru_predict('models/GRU_10am.h5', 'models/gru_scaler.joblib', 'gru_sql.csv')
         else:
             linebot_manager.send_text_message('正在預測明日大盤收盤指數...')
-            reply_text = predicter.gru_predict('models/LSTM_tomorrow.h5', 'models/lstm_scaler.joblib', 'lstm_sql.csv')
+            reply_text = predicter.lstm_predict('models/LSTM_tomorrow.h5', 'models/lstm_scaler.joblib', 'lstm_sql.csv')
 
         linebot_manager.send_text_message(reply_text)
 
