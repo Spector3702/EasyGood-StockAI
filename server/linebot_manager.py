@@ -190,7 +190,7 @@ class LineBotManager():
     def handle_templates_5(self, postback_data):
         key = postback_data.split('5_', 1)[1] if '5_' in postback_data else None
         df = load_mock_sql('lstm_sql.csv')
-        latest_data = df.loc[-3:, ['date', key]]
+        latest_data = df.iloc[-3:][['date', key]]
         reply_text = f'您好，近三日{key}期貨未平倉為:\n'
 
         for _, row in latest_data.iterrows():
