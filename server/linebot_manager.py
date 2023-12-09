@@ -116,6 +116,14 @@ class LineBotManager():
         self.send_text_message(reply_text)
 
     def build_templates_3(self):
+        template3_url = f'{self.base_img_url}/template3-空方篩選股票'
+        images = [
+            f'{template3_url}/跌破區間.png',
+            f'{template3_url}/爆量長黑.png',
+            f'{template3_url}/跌破季線.png',
+            f'{template3_url}/空頭吞噬.png',
+            f'{template3_url}/死亡交叉.png'
+        ]
         titles = ['跌破整理區間', '爆量長黑', '跌破季線', '空頭吞噬', '5與20日均線死亡交叉']
         texts = ['跌破整理區間', '爆量長黑', '跌破季線', '空頭吞噬', '5與20日均線死亡交叉']
         actions = [
