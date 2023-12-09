@@ -8,6 +8,7 @@ class LineBotManager():
     def __init__(self, token, event):
         self.line_bot_api = LineBotApi(token)
         self.user_id = event.source.user_id
+        self.base_img_url = 'https://storage.cloud.google.com/stockmarketindexai-sql/imgs'
 
     def send_text_message(self, text):
         message = TextSendMessage(text=text)
@@ -52,11 +53,11 @@ class LineBotManager():
             self.line_bot_api.set_rich_menu_image(rich_menu_id, "image/jpeg", f)
         self.line_bot_api.set_default_rich_menu(rich_menu_id)
 
-    def send_template(self, titles, texts, actions_list):
+    def send_template(self, images, titles, texts, actions_list):
         columns = []
-        for title, text, actions in zip(titles, texts, actions_list):
+        for image, title, text, actions in zip(images, titles, texts, actions_list):
             column = CarouselColumn(
-                thumbnail_image_url='https://steam.oxxostudio.tw/download/python/line-template-message-demo.jpg',
+                thumbnail_image_url=image,
                 title=title,
                 text=text,
                 actions=actions
@@ -72,8 +73,16 @@ class LineBotManager():
         )
 
     def build_templates_1(self):
+        template1_url = f'{self.base_img_url}/template1-%E5%A4%9A%E6%96%B9%E7%AF%A9%E9%81%B8%E8%82%A1%E7%A5%A8'
+        images = [
+            f'{template1_url}/%E7%AA%81%E7%A0%B4%E5%8D%80%E9%96%93.png',
+            f'{template1_url}/%E7%88%86%E9%87%8F%E9%95%B7%E7%B4%85.png',
+            f'{template1_url}/%E7%AA%81%E7%A0%B4%E5%AD%A3%E7%B7%9A.png',
+            f'{template1_url}/%E5%A4%9A%E9%A0%AD%E5%90%9E%E5%99%AC.png',
+            f'{template1_url}/%E9%BB%83%E9%87%91%E4%BA%A4%E5%8F%89.png'
+        ]
         titles = ['突破整理區間', '爆量長紅', '突破季線', '多頭吞噬', '5與20日均線黃金交叉']
-        texts = ['', '爆量長紅', '突破季線', '多頭吞噬', '5與20日均線黃金交叉']
+        texts = ['突破整理區間', '爆量長紅', '突破季線', '多頭吞噬', '5與20日均線黃金交叉']
         actions = [
             [
                 PostbackAction(label='查詢', data='1_突破整理區間'),
@@ -97,7 +106,7 @@ class LineBotManager():
             ]
         ]
 
-        self.send_template(titles, texts, actions)
+        self.send_template(images, titles, texts, actions)
 
     def handle_templates_1(self, postback_data, scrapper):
         key = postback_data.split('1_', 1)[1] if '1_' in postback_data else None
