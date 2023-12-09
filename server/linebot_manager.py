@@ -149,7 +149,7 @@ class LineBotManager():
             ]
         ]
 
-        self.send_template(titles, texts, actions)
+        self.send_template(images, titles, texts, actions)
 
     def handle_templates_3(self, postback_data, scrapper):
         key = postback_data.split('3_', 1)[1] if '3_' in postback_data else None
