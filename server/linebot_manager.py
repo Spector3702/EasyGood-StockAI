@@ -73,7 +73,7 @@ class LineBotManager():
 
     def build_templates_1(self):
         titles = ['突破整理區間', '爆量長紅', '突破季線', '多頭吞噬', '5與20日均線黃金交叉']
-        texts = ['突破整理區間', '爆量長紅', '突破季線', '多頭吞噬', '5與20日均線黃金交叉']
+        texts = ['', '爆量長紅', '突破季線', '多頭吞噬', '5與20日均線黃金交叉']
         actions = [
             [
                 PostbackAction(label='查詢', data='1_突破整理區間'),
@@ -143,13 +143,15 @@ class LineBotManager():
 
     def build_templates_4(self):
         titles = ['美元/台幣', '美元/日圓']
-        texts = ['美元/台幣', '美元/日圓']
+        texts = ['看透美元匯率，市場強弱，捕捉股市資金變化。', '日幣避險巧妙，智選投資，穩守風險，掌握未來。']
         actions = [
             [
-                PostbackAction(label='查詢', data='4_美元/台幣')
+                PostbackAction(label='查詢', data='4_美元/台幣'),
+                URIAction(label='美元/台幣 - StockQ', uri='https://www.stockq.org/forex/USDTWD.php')
             ],
             [
-                PostbackAction(label='查詢', data='4_美元/日圓')
+                PostbackAction(label='查詢', data='4_美元/日圓'),
+                URIAction(label='美元/日圓 - StockQ', uri='https://www.stockq.org/forex/USDJPY.php')
             ]
         ]
 
@@ -171,17 +173,24 @@ class LineBotManager():
 
     def build_templates_5(self):
         titles = ['外資', '投信', '自營商']
-        texts = ['外資', '投信', '自營商']
+        texts = [
+            '外資暗潮洶湧，牽動臺股風向。劇烈波動，風險挑戰，同時帶來投資機會與成長活力。', 
+            '投信穩定力，深耕臺股田野。資金活水，推動市場穩健成長~', 
+            '自營商專業避險。穩健操作，緩衝風險，保值增值，投資無憂。'
+        ]
         actions = [
             [
-                PostbackAction(label='查詢', data='5_外資')
+                PostbackAction(label='查詢', data='5_外資'),
+                URIAction(label='操作建議', uri='https://rich01.com/foreign-investment-overbought-oversold/')
             ],
             [
-                PostbackAction(label='查詢', data='5_投信')
+                PostbackAction(label='查詢', data='5_投信'),
+                URIAction(label='操作建議', uri='https://rich01.com/securities-investment-trust-verbought-oversold/')
             ],
             [
-                PostbackAction(label='查詢', data='5_自營商')
-            ]
+                PostbackAction(label='查詢', data='5_自營商'),
+                URIAction(label='操作建議', uri='https://rich01.com/dealer-overbought-oversold/#%E8%87%AA%E7%87%9F%E5%95%86%E6%8C%81%E8%82%A1%E6%AF%94%E4%BE%8B%E6%9C%83%E5%A6%82%E4%BD%95%E5%BD%B1%E9%9F%BF%E8%82%A1%E5%83%B9%EF%BC%9F')
+            ],
         ]
 
         self.send_template(titles, texts, actions)
@@ -204,7 +213,7 @@ class LineBotManager():
 
     def build_templates_6(self):
         titles = ['美股四大指數']
-        texts = ['美股四大指數']
+        texts = ['洞悉美股四大指數，如同洞悉光明未來!']
         actions = [
             [
                 PostbackAction(label='費半', data='6_費半')
