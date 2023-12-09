@@ -73,13 +73,13 @@ class LineBotManager():
         )
 
     def build_templates_1(self):
-        template1_url = f'{self.base_img_url}/template1-%E5%A4%9A%E6%96%B9%E7%AF%A9%E9%81%B8%E8%82%A1%E7%A5%A8'
+        template_url = f'{self.base_img_url}/template1-多方篩選股票'
         images = [
-            f'{template1_url}/%E7%AA%81%E7%A0%B4%E5%8D%80%E9%96%93.png',
-            f'{template1_url}/%E7%88%86%E9%87%8F%E9%95%B7%E7%B4%85.png',
-            f'{template1_url}/%E7%AA%81%E7%A0%B4%E5%AD%A3%E7%B7%9A.png',
-            f'{template1_url}/%E5%A4%9A%E9%A0%AD%E5%90%9E%E5%99%AC.png',
-            f'{template1_url}/%E9%BB%83%E9%87%91%E4%BA%A4%E5%8F%89.png'
+            f'{template_url}/突破區間.png',
+            f'{template_url}/爆量長紅.png',
+            f'{template_url}/突破季線.png',
+            f'{template_url}/多頭吞噬.png',
+            f'{template_url}/黃金交叉.png'
         ]
         titles = ['突破整理區間', '爆量長紅', '突破季線', '多頭吞噬', '5與20日均線黃金交叉']
         texts = ['突破整理區間', '爆量長紅', '突破季線', '多頭吞噬', '5與20日均線黃金交叉']
@@ -116,13 +116,13 @@ class LineBotManager():
         self.send_text_message(reply_text)
 
     def build_templates_3(self):
-        template3_url = f'{self.base_img_url}/template3-空方篩選股票'
+        template_url = f'{self.base_img_url}/template3-空方篩選股票'
         images = [
-            f'{template3_url}/跌破區間.png',
-            f'{template3_url}/爆量長黑.png',
-            f'{template3_url}/跌破季線.png',
-            f'{template3_url}/空頭吞噬.png',
-            f'{template3_url}/死亡交叉.png'
+            f'{template_url}/跌破區間.png',
+            f'{template_url}/爆量長黑.png',
+            f'{template_url}/跌破季線.png',
+            f'{template_url}/空頭吞噬.png',
+            f'{template_url}/死亡交叉.png'
         ]
         titles = ['跌破整理區間', '爆量長黑', '跌破季線', '空頭吞噬', '5與20日均線死亡交叉']
         texts = ['跌破整理區間', '爆量長黑', '跌破季線', '空頭吞噬', '5與20日均線死亡交叉']
@@ -159,6 +159,11 @@ class LineBotManager():
         self.send_text_message(reply_text)
 
     def build_templates_4(self):
+        template_url = f'{self.base_img_url}/template4-外匯市場'
+        images = [
+            f'{template_url}/美元兌台幣.png',
+            f'{template_url}/美元兌日圓.png'
+        ]
         titles = ['美元/台幣', '美元/日圓']
         texts = ['看透美元匯率，市場強弱，捕捉股市資金變化。', '日幣避險巧妙，智選投資，穩守風險，掌握未來。']
         actions = [
@@ -172,7 +177,7 @@ class LineBotManager():
             ]
         ]
 
-        self.send_template(titles, texts, actions)
+        self.send_template(images, titles, texts, actions)
 
     def handle_templates_4(self, postback_data, scrapper):
         if postback_data == '4_美元/台幣':
@@ -189,6 +194,12 @@ class LineBotManager():
         self.send_text_message(reply_text)
 
     def build_templates_5(self):
+        template_url = f'{self.base_img_url}/template5-期貨未平倉'
+        images = [
+            f'{template_url}/外資.png',
+            f'{template_url}/投信.png',
+            f'{template_url}/自營商.png'
+        ]
         titles = ['外資', '投信', '自營商']
         texts = [
             '外資暗潮洶湧，牽動臺股風向。劇烈波動，風險挑戰，同時帶來投資機會與成長活力。', 
@@ -210,7 +221,7 @@ class LineBotManager():
             ],
         ]
 
-        self.send_template(titles, texts, actions)
+        self.send_template(images, titles, texts, actions)
 
     def handle_templates_5(self, postback_data):
         key = postback_data.split('5_', 1)[1] if '5_' in postback_data else None
@@ -229,6 +240,8 @@ class LineBotManager():
         self.send_text_message(reply_text)
 
     def build_templates_6(self):
+        template_url = f'{self.base_img_url}/template6-美國四大指數'
+        images = [f'{template_url}/美股四大指數.png']
         titles = ['美股四大指數']
         texts = ['洞悉美股四大指數，如同洞悉光明未來!']
         actions = [
@@ -240,7 +253,7 @@ class LineBotManager():
             ]
         ]
 
-        self.send_template(titles, texts, actions)
+        self.send_template(images, titles, texts, actions)
 
     def handle_templates_6(self, postback_data):
         key = postback_data.split('6_', 1)[1] if '6_' in postback_data else None
