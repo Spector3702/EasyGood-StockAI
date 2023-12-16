@@ -15,6 +15,7 @@ class Predicter():
           tw_future = self.scrapper.get_TW_Future_data()
           sox = self.scrapper.get_SOX_data()
           sp500 = self.scrapper.get_SP500_data()
+          nasdaq = self.scrapper.get_nasdaq_data()
           tsmc = self.scrapper.get_TSMC_data()
           usd = self.scrapper.get_USD_Index_data()
           jpy = self.scrapper.get_JPY_Index_data()
@@ -24,6 +25,7 @@ class Predicter():
                "自營商": to_float(tw_future['自營商']), "投信": to_float(tw_future['投信']), "外資": to_float(tw_future['外資']),
                "費半_開盤價": to_float(sox['開盤']), "費半_最高價": to_float(sox['最高']), "費半_最低價": to_float(sox['最低']), "費半_收盤價": to_float(sox['收盤']),
                "SP500_開盤價": to_float(sp500['開盤']), "SP500_最高價": to_float(sp500['最高']), "SP500_最低價": to_float(sp500['最低']), "SP500_收盤價": to_float(sp500['收盤']),
+               "nasdaq_開盤價": to_float(nasdaq['開盤']), "nasdaq_最高價": to_float(nasdaq['最高']), "nasdaq_最低價": to_float(nasdaq['最低']), "nasdaq_收盤價": to_float(nasdaq['收盤']),
                "台積_開盤價": to_float(tsmc['開盤']), "台積_最高價": to_float(tsmc['最高']), "台積_最低價": to_float(tsmc['最低']), "台積_收盤價": to_float(tsmc['收盤']),
                "美元_開盤價": to_float(usd['開盤']), "美元_最高價": to_float(usd['最高']), "美元_最低價": to_float(usd['最低']), "美元_收盤價": to_float(usd['指數']),
                "日圓_開盤價": to_float(jpy['開盤']), "日圓_最高價": to_float(jpy['最高']), "日圓_最低價": to_float(jpy['最低']), "日圓_收盤價": to_float(jpy['指數'])
