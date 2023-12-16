@@ -161,6 +161,30 @@ class Scrapper():
 
         return data
     
+    def get_SP500_data(self):
+        url = "https://www.google.com/search?q=SP500&rlz=1C1VDKB_zh-TWTW1019TW1019&oq=SP500&gs_lcrp=EgZjaHJvbWUyDwgAEEUYORiDARixAxiABDINCAEQABiDARixAxiABDINCAIQABiDARixAxiABDIHCAMQABiABDINCAQQABiDARixAxiABDIHCAUQABiABDIHCAYQABiABDIHCAcQABiABDIHCAgQABiABDIHCAkQABiABNIBBzM2N2owajeoAgCwAgA&sourceid=chrome&ie=UTF-8"
+        self.driver.get(url)
+
+        xpaths = {
+            "開盤": "/html/body/div[5]/div/div[10]/div[3]/div[1]/div[2]/div/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div[3]/div/g-card-section[2]/div/div/div[1]/table/tbody/tr[1]/td[2]/div",
+            "最高": "/html/body/div[5]/div/div[10]/div[3]/div[1]/div[2]/div/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div[3]/div/g-card-section[2]/div/div/div[1]/table/tbody/tr[2]/td[2]/div",
+            "最低": "/html/body/div[5]/div/div[10]/div[3]/div[1]/div[2]/div/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div[3]/div/g-card-section[2]/div/div/div[2]/table/tbody/tr[1]/td[2]/div",
+            "收盤": "/html/body/div[5]/div/div[10]/div[3]/div[1]/div[2]/div/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div[3]/g-card-section/div/g-card-section/div[2]/div[1]/span[1]/span/span"
+        }
+
+        data = {}
+        for key, path in xpaths.items():
+            input_element = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, path))
+            )
+            if input_element:
+                text_content = input_element.text
+                data[key] = text_content
+            else:
+                print(f"No element found for XPath: {path}")
+
+        return data
+    
     def get_TSMC_data(self):
         url = "https://www.google.com/search?q=%E5%8F%B0%E7%A9%8D%E9%9B%BB%E8%82%A1%E5%83%B9"
         self.driver.get(url)
