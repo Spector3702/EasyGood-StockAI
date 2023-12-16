@@ -3,7 +3,7 @@ import argparse
 import pytz
 
 from flask import Flask, request, abort, jsonify
-from linebot.v3 import WebhookHandler
+from linebot import WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
 from datetime import datetime
