@@ -246,10 +246,10 @@ class LineBotManager():
         texts = ['洞悉美股四大指數，如同洞悉光明未來!']
         actions = [
             [
-                PostbackAction(label='費半', data='6_費半')
-                # PostbackAction(label='查詢', data='6_S&P500'),
-                # PostbackAction(label='查詢', data='6_那斯達克'),
-                # PostbackAction(label='查詢', data='6_道瓊')
+                PostbackAction(label='費半', data='6_費半'),
+                PostbackAction(label='S&P500', data='6_S&P500'),
+                PostbackAction(label='那斯達克', data='6_nasdaq'),
+                PostbackAction(label='道瓊', data='6_dji')
             ]
         ]
 
