@@ -241,13 +241,15 @@ class LineBotManager():
 
     def build_templates_6(self):
         template_url = f'{self.base_img_url}/template6-美國四大指數'
-        images = [f'{template_url}/美股四大指數.png']
-        titles = ['美股四大指數']
-        texts = ['洞悉美股四大指數，如同洞悉光明未來!']
+        images = [f'{template_url}/美股四大指數.png', f'{template_url}/美股四大指數.png']
+        titles = ['費半 & S&P500', '那斯達克 & 道瓊']
+        texts = ['洞悉美股四大指數，如同洞悉光明未來!', '洞悉美股四大指數，如同洞悉光明未來!']
         actions = [
             [
                 PostbackAction(label='費半', data='6_費半'),
-                PostbackAction(label='S&P500', data='6_S&P500'),
+                PostbackAction(label='S&P500', data='6_S&P500')
+            ],
+            [
                 PostbackAction(label='那斯達克', data='6_nasdaq'),
                 PostbackAction(label='道瓊', data='6_dji')
             ]
