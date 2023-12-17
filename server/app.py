@@ -63,7 +63,9 @@ def handle_message(event):
 
     elif message_text == "大盤預測":
         linebot_manager.send_text_message('正在預測大盤收盤指數...')
-        reply_text = predict_basedon_time(linebot_manager)
+        # reply_text = predict_basedon_time()
+        predicter = Predicter(scrapper)
+        reply_text = predicter.gru_predict()
         linebot_manager.send_text_message(reply_text)
 
     elif message_text == "空方精選個股":
