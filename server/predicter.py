@@ -69,7 +69,7 @@ class Predicter():
           dummy_array[0, target_index] = prediction[0][0]
           prediction_denormalized = scaler.inverse_transform(dummy_array)[0, target_index]
 
-          reply_text = f"Predicted tomorrow's close index: {prediction_denormalized:.2f}"
+          reply_text = f"Predicted close index: {prediction_denormalized:.2f}"
           return reply_text
 
      def gru_predict(self):
@@ -96,5 +96,5 @@ class Predicter():
           dummy_array[idx_index_2pm] = prediction[0, 0]
           prediction_denormalized = scaler.inverse_transform([dummy_array])[0, idx_index_2pm]
 
-          reply_text = f"Predicted today's close index: {prediction_denormalized:.2f}"
+          reply_text = f"Predicted close index: {prediction_denormalized:.2f}"
           return reply_text
