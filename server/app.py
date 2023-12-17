@@ -23,7 +23,20 @@ scrapper = Scrapper(args.driver)
 
 token = '6pQcNXYxqu0Kwiu4gfZcDtkt/qHcfApZ3s0DSGG+ISNWTSUv+I4p4YRWkOVHVngVFf68pWJ09p04yqZtJkfUu4OipzWrr0vwJGqC/nlMzTPq4bPutXzBm/FUBgtMab67e+KfxlW0MR1aE/bAdxlbvQdB04t89/1O/w1cDnyilFU='
 handler = WebhookHandler('ecfb9d5eefbcbb9f678a79a25af244d3')
-# line_bot_api.push_message('U6e55546093da4b2e769f0edc16fec07f', TextSendMessage(text='你可以開始了'))
+
+
+def predict_basedon_time():
+    taiwan_time = pytz.timezone('Asia/Taipei')
+    current_time = datetime.now(taiwan_time)
+    predicter = Predicter(scrapper)
+
+    # Check if current time is within 9:00 AM to 1:30 PM
+    if current_time.hour >= 9 and (current_time.hour < 13 or (current_time.hour == 13 and current_time.minute <= 30)):
+        reply_text = predicter.gru_predict()
+    else:
+        reply_text = predicter.lstm_predict()
+
+    return reply_text
 
 
 @app.route("/callback", methods=['POST'])
@@ -49,18 +62,8 @@ def handle_message(event):
         linebot_manager.build_templates_1()
 
     elif message_text == "大盤預測":
-        taiwan_time = pytz.timezone('Asia/Taipei')
-        current_time = datetime.now(taiwan_time)
-        predicter = Predicter(scrapper)
-
-        # Check if current time is within 9:00 AM to 1:30 PM
-        if current_time.hour >= 9 and (current_time.hour < 13 or (current_time.hour == 13 and current_time.minute <= 30)):
-            linebot_manager.send_text_message('正在預測今日大盤收盤指數...')
-            reply_text = predicter.gru_predict()
-        else:
-            linebot_manager.send_text_message('正在預測明日大盤收盤指數...')
-            reply_text = predicter.lstm_predict()
-
+        linebot_manager.send_text_message('正在預測大盤收盤指數...')
+        reply_text = predict_basedon_time(linebot_manager)
         linebot_manager.send_text_message(reply_text)
 
     elif message_text == "空方精選個股":
@@ -109,6 +112,12 @@ def append_gru_row_data():
     gcs_helper = GcsHelper()
     gcs_helper.append_row_to_gcs_file('stockmarketindexai-sql', 'gru_sql.csv', single_row)
     return jsonify(single_row)
+
+
+@app.route('/predict', methods=['GET'])
+def predict_index():
+    reply_text = predict_basedon_time()
+    return jsonify({'message': reply_text})
 
 
 if __name__ == "__main__":

@@ -51,17 +51,18 @@ class Predicter():
      def lstm_predict(self):
           model, scaler, df = self._prepare_prediction('models/LSTM_tomorrow.h5', 'models/lstm_scaler.joblib', 'lstm_sql.csv')
           latest_data = df.tail(2)
-          latest_data = latest_data.drop(['date', 
+          latest_data = latest_data.drop([
                'SP500_收盤價', 'SP500_最低價', 'SP500_最高價', 'SP500_開盤價', 
                'dji_收盤價' ,'dji_最低價', 'dji_最高價', 'dji_開盤價', 
-               'nasdaq_收盤價', 'nasdaq_最低價', 'nasdaq_最高價', 'nasdaq_開盤價'], axis=1
+               'nasdaq_收盤價', 'nasdaq_最低價', 'nasdaq_最高價', 'nasdaq_開盤價'], 
+               axis=1
           )
-          latest_data_scaled = scaler.transform(latest_data)
+          latest_data_scaled = scaler.transform(latest_data.drop(['date'], axis=1))
           X_predict = latest_data_scaled.reshape(1, latest_data_scaled.shape[0], latest_data_scaled.shape[1])
           prediction = model.predict(X_predict)
 
           # Subtract 1 because 'date' column was dropped
-          target_index = list(df.columns).index('大盤_收盤價') - 1
+          target_index = list(latest_data.columns).index('大盤_收盤價') - 1
 
           # Construct a dummy array for inverse transformation
           dummy_array = np.zeros((1, latest_data_scaled.shape[1]))
