@@ -1,3 +1,4 @@
+import random
 import numpy as np
 import tensorflow as tf
 from datetime import datetime
@@ -47,6 +48,49 @@ class Predicter():
           scaler = load(scaler_path)
           df = load_mock_sql(csv_name)
           return model, scaler, df
+     
+     def _compute_diff_index(self, predict_today, yesterday):
+          diff_index = predict_today - yesterday
+          print(diff_index)
+          print(predict_today)
+          print(yesterday)
+          diff_percent = diff_index * 100 / yesterday
+          is_rised = diff_index > 0
+          return diff_index, diff_percent, is_rised
+     
+     def _random_predict_texts(self, is_rised=True):
+          rise_texts = [
+               '不要僅僅關注單一指數的上漲，應該多角度觀察市場動態，包括產業表現、國際經濟環境等。',
+               '確保你的投資組合有足夠的分散性，這樣可以降低單一資產波動對整體投資的風險。',
+               '持續追踪相關新聞和市場資訊，了解可能影響投資的因素，及時調整投資策略。',
+               '即使整體市場上漲，仍要謹慎挑選個別股票。注意公司基本面和未來潛力。',
+               '當市場上漲時，追高可能帶來風險。謹慎考慮進場時機，避免過度樂觀。',
+               '定期檢討你的投資組合，確保它與你的風險承受能力和目標相符。',
+               '將投資分散到不同的行業、地區和資產類別，可以減緩單一事件對整體投資組合的影響。',
+               '透過設定風險限制，可以在市場波動時保護投資組合，防止情緒影響決策。'
+          ]
+
+          fall_texts = [
+               '避免衝動決策。情緒影響投資判斷，謹慎思考。',
+               '若持股標的有下跌，應檢視投資目標，確保長期視角不受短期波動影響。市場波動是常態。',
+               '評估風險承受力，必要時調整投資組合以降低風險。避免過度激進。',
+               '下跌時，應評估風險承受力，審慎挑選股票，注重基本面和企業穩定性。品質勝於數量。',
+               '下跌時，留意市場動向，了解下跌原因及可能的影響。市場消息對投資決策影響重大。',
+               '主動與專業顧問溝通，尋求建議和市場解讀。保持開放心態，隨時調整投資策略。',
+               '定期檢視資產配置，確保投資組合仍符合風險和回報預期。靈活應對市場變化。',
+               '藉機學習，了解市場週期和歷史教訓。過去經驗有助於更明智的投資決策。',
+               '謹慎追踪市場指標，但不要被短期波動左右。堅守長期投資策略。',
+               '最重要的是保持耐心，市場波動是不可避免的，但也為理性的投資提供了機會。'
+          ]
+
+          if is_rised:
+               random_index = random.randint(0, len(rise_texts) - 1)
+               random_texts = rise_texts[random_index]
+          else:
+               random_index = random.randint(0, len(fall_texts) - 1)
+               random_texts = fall_texts[random_index]
+
+          return random_texts
 
      def lstm_predict(self):
           model, scaler, df = self._prepare_prediction('models/LSTM_tomorrow.h5', 'models/lstm_scaler.joblib', 'lstm_sql.csv')
@@ -95,6 +139,9 @@ class Predicter():
           dummy_array = np.zeros(data_scaled.shape[1])
           dummy_array[idx_index_2pm] = prediction[0, 0]
           prediction_denormalized = scaler.inverse_transform([dummy_array])[0, idx_index_2pm]
-
-          reply_text = f"Predicted close index: {prediction_denormalized:.2f}"
+          
+          diff_index, diff_percent, is_rised = self._compute_diff_index(prediction_denormalized, latest_data.iloc[-2, idx_index_2pm])
+          random_text = self._random_predict_texts(is_rised)
+          diff_text = f'+{diff_index:.2f}' if is_rised else f'{diff_index:.2f}'
+          reply_text = f'您好，為您預測下次收盤指數為"…{prediction_denormalized:.2f}…" ，距離昨日"{diff_text}"點 {diff_percent:.2f}%，另外提醒您，{random_text}'
           return reply_text

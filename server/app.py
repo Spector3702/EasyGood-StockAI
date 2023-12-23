@@ -118,7 +118,8 @@ def append_gru_row_data():
 
 @app.route('/predict', methods=['GET'])
 def predict_index():
-    reply_text = predict_basedon_time()
+    predicter = Predicter(scrapper)
+    reply_text = predicter.gru_predict()
     return jsonify({'message': reply_text})
 
 
