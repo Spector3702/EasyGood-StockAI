@@ -143,5 +143,10 @@ class Predicter():
           diff_index, diff_percent, is_rised = self._compute_diff_index(prediction_denormalized, latest_data.iloc[-2, idx_index_2pm])
           random_text = self._random_predict_texts(is_rised)
           diff_text = f'+{diff_index:.2f}' if is_rised else f'{diff_index:.2f}'
-          reply_text = f'您好，為您預測下次收盤指數為"…{prediction_denormalized:.2f}…" ，距離昨日"{diff_text}"點 {diff_percent:.2f}%，另外提醒您，{random_text}'
+          reply_text = (
+               f'您好，為您預測\n'
+               f'- 下次收盤指數為"{prediction_denormalized:.2f}"\n'
+               f'- 距離昨日"{diff_text}"點 ({diff_percent:.2f}%)\n'
+               f'- 另外提醒您，{random_text}'
+          )
           return reply_text
