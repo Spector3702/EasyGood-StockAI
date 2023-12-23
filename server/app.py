@@ -21,8 +21,8 @@ args = parser.parse_args()
 app = Flask(__name__)
 scrapper = Scrapper(args.driver)
 
-token = '6pQcNXYxqu0Kwiu4gfZcDtkt/qHcfApZ3s0DSGG+ISNWTSUv+I4p4YRWkOVHVngVFf68pWJ09p04yqZtJkfUu4OipzWrr0vwJGqC/nlMzTPq4bPutXzBm/FUBgtMab67e+KfxlW0MR1aE/bAdxlbvQdB04t89/1O/w1cDnyilFU='
-handler = WebhookHandler('ecfb9d5eefbcbb9f678a79a25af244d3')
+token = '3+6U76yxT4cU/ADsqm7RYh1i/iH8Xcytmm5zRNrIWk5KvOy57eHp7RvoU/0WKgxhh9Ss8K/FsgMoQOtsTsZZDvYnb63zIqAxjKvnhX8hFbvVkW2qQloLDoaVr1mL4FlBbW0vlxCmIjMqAORBXoLfJAdB04t89/1O/w1cDnyilFU='
+handler = WebhookHandler('e1d85fe8f7aaa09e1d36d91db15a4953')
 
 
 def predict_basedon_time():
