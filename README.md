@@ -1,4 +1,4 @@
-# StockMarketIndexAI
+# EasyGood-StockAI
 A project which deployed a AI server in Cloud Run, and interact with Line Message API in order to predict TWII with Line-bot.
 
 
