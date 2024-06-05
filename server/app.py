@@ -13,18 +13,20 @@ from gcs_helper import GcsHelper
 from linebot_manager import LineBotManager
 from predicter import Predicter
 
-
+# 這段程式碼解析命令行參數，用於指定 Chromedriver 的路徑。
 parser = argparse.ArgumentParser()
 parser.add_argument("--driver", required=True, help="spceify path to chromedriver.")
 args = parser.parse_args()
 
+# 初始化 Flask 應用和 Scrapper 類的實例
 app = Flask(__name__)
 scrapper = Scrapper(args.driver)
 
+# 設置 LINE Bot 的 token 和 handler。
 token = '3+6U76yxT4cU/ADsqm7RYh1i/iH8Xcytmm5zRNrIWk5KvOy57eHp7RvoU/0WKgxhh9Ss8K/FsgMoQOtsTsZZDvYnb63zIqAxjKvnhX8hFbvVkW2qQloLDoaVr1mL4FlBbW0vlxCmIjMqAORBXoLfJAdB04t89/1O/w1cDnyilFU='
 handler = WebhookHandler('e1d85fe8f7aaa09e1d36d91db15a4953')
 
-
+# 根據台灣時間判斷當前時間段並使用不同的預測模型（GRU 或 LSTM）來生成預測結果。
 def predict_basedon_time():
     taiwan_time = pytz.timezone('Asia/Taipei')
     current_time = datetime.now(taiwan_time)
@@ -39,6 +41,7 @@ def predict_basedon_time():
     return reply_text
 
 
+# 處理 LINE Bot 回調請求，驗證簽名並調用 handler。
 @app.route("/callback", methods=['POST'])
 def callback():
     signature = request.headers['X-Line-Signature']
@@ -53,6 +56,7 @@ def callback():
     return 'OK'
 
 
+# 根據收到的文本消息內容來執行相應的操作，例如回傳預測結果或構建模板消息。
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     linebot_manager = LineBotManager(token, event)
@@ -81,6 +85,7 @@ def handle_message(event):
         linebot_manager.build_templates_6()
 
 
+# 根據回傳事件的數據來執行相應的操作。
 @handler.add(PostbackEvent)
 def handle_postback(event):
     linebot_manager = LineBotManager(token, event)
@@ -98,6 +103,7 @@ def handle_postback(event):
         linebot_manager.handle_templates_6(postback_data)
 
 
+# 這些路徑定義了一些 API 端點，用於追加 LSTM 和 GRU 數據到 GCS 文件以及進行指數預測。
 @app.route('/append-lstm-data', methods=['GET'])
 def append_lstm_row_data():
     predicter = Predicter(scrapper)
@@ -123,6 +129,7 @@ def predict_index():
     return jsonify({'message': reply_text})
 
 
+# 設置應用運行的端口並啟動 Flask 應用。
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)

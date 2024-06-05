@@ -11,7 +11,9 @@ class Predicter():
      def __init__(self, scrapper):
           self.scrapper = scrapper
 
+     # 這段代碼從各種來源獲取數據並構建一行包含各種股市指數和匯率數據的字典。
      def build_lstm_row_data(self):
+          # 獲取各種數據
           twii = self.scrapper.get_TWII_data()
           tw_future = self.scrapper.get_TW_Future_data()
           sox = self.scrapper.get_SOX_data()
@@ -21,6 +23,9 @@ class Predicter():
           tsmc = self.scrapper.get_TSMC_data()
           usd = self.scrapper.get_USD_Index_data()
           jpy = self.scrapper.get_JPY_Index_data()
+
+          
+          # 構建並返回行數據字典
           return {
                "date": datetime.now().strftime("%Y/%m/%d"),
                "大盤_開盤價": to_float(twii['開盤']), "大盤_最高價": to_float(twii['最高']), "大盤_最低價": to_float(twii['最低']), "大盤_收盤價": to_float(twii['收盤']), "大盤_成交量": to_float(twii['成交金額(億)']) * 10**8,
@@ -34,6 +39,7 @@ class Predicter():
                "日圓_開盤價": to_float(jpy['開盤']), "日圓_最高價": to_float(jpy['最高']), "日圓_最低價": to_float(jpy['最低']), "日圓_收盤價": to_float(jpy['指數'])
           }
 
+     # 這段代碼從未來期貨數據和當前指數數據中構建一行數據，返回包含各種股市指數的字典。
      def build_gru_row_data(self):
           future = self.scrapper.get_TW_FITX_data()
           index = self.scrapper.get_TWII_data()
@@ -43,12 +49,14 @@ class Predicter():
                "index_9": to_float(index['開盤']), "index_10": to_float(index['現在']), "index_2": to_float(index['收盤'])
           }
      
+     # 這段代碼從指定路徑載入模型和標準化工具，並讀取 CSV 數據。
      def _prepare_prediction(self, model_path, scaler_path, csv_name):
           model = tf.keras.models.load_model(model_path)
           scaler = load(scaler_path)
           df = load_mock_sql(csv_name)
           return model, scaler, df
      
+     # 這段代碼計算預測值與前一天的差異，並確定指數是上升還是下降。
      def _compute_diff_index(self, predict_today, yesterday):
           diff_index = predict_today - yesterday
           print(diff_index)
@@ -58,6 +66,7 @@ class Predicter():
           is_rised = diff_index > 0
           return diff_index, diff_percent, is_rised
      
+     # 這段代碼根據指數的變化隨機選擇預測文本，提供上漲或下跌的建議。
      def _random_predict_texts(self, is_rised=True):
           rise_texts = [
                '不要僅僅關注單一指數的上漲，應該多角度觀察市場動態，包括產業表現、國際經濟環境等。',
@@ -92,6 +101,7 @@ class Predicter():
 
           return random_texts
 
+     # 這段代碼使用 LSTM 模型預測明天的收盤指數，並返回預測結果。
      def lstm_predict(self):
           model, scaler, df = self._prepare_prediction('models/LSTM_tomorrow.h5', 'models/lstm_scaler.joblib', 'lstm_sql.csv')
           latest_data = df.tail(2)
@@ -116,6 +126,7 @@ class Predicter():
           reply_text = f"Predicted close index: {prediction_denormalized:.2f}"
           return reply_text
 
+     # 這段代碼使用 GRU 模型預測今日的收盤指數，並返回預測結果和建議。
      def gru_predict(self):
           model, scaler, df = self._prepare_prediction('models/GRU_10am.h5', 'models/gru_scaler.joblib', 'gru_sql.csv')
           df = df.drop(['date'], axis=1)

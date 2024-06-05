@@ -5,15 +5,18 @@ from utils import load_mock_sql
 
 
 class LineBotManager():
+    # 初始化 LineBotManager 實例，設置 LINE Bot API 和用戶 ID，以及圖片基礎 URL。
     def __init__(self, token, event):
         self.line_bot_api = LineBotApi(token)
         self.user_id = event.source.user_id
         self.base_img_url = 'https://storage.cloud.google.com/stockmarketindexai-sql/imgs'
 
+    # send_text_message 方法：構建並發送文本消息給用戶。
     def send_text_message(self, text):
         message = TextSendMessage(text=text)
         self.line_bot_api.push_message(self.user_id, message)
 
+    # build_richmenu 方法：建立一個副menu，並設置相應的操作區域。
     def build_richmenu(self, image_path):
         new_rich_menu = RichMenu(
             size=RichMenuSize(width=2500, height=1686),
@@ -53,6 +56,7 @@ class LineBotManager():
             self.line_bot_api.set_rich_menu_image(rich_menu_id, "image/jpeg", f)
         self.line_bot_api.set_default_rich_menu(rich_menu_id)
 
+    # send_template 方法：構建並發送一個旋轉木馬模板消息（Carousel Template）給用戶。
     def send_template(self, images, titles, texts, actions_list):
         columns = []
         for image, title, text, actions in zip(images, titles, texts, actions_list):
@@ -72,6 +76,8 @@ class LineBotManager():
             )
         )
 
+    # build_templates_1 方法：建立多方篩選股票的模板消息。
+    # handle_templates_1 方法：處理多方篩選股票的查詢，根據回傳的數據查找並回應相應的信息。
     def build_templates_1(self):
         template_url = f'{self.base_img_url}/template1-多方篩選股票'
         images = [
@@ -115,6 +121,7 @@ class LineBotManager():
         reply_text = data.get(key, '找不到相關資料')
         self.send_text_message(reply_text)
 
+    # 處理空方篩選股票的模板消息和查詢。
     def build_templates_3(self):
         template_url = f'{self.base_img_url}/template3-空方篩選股票'
         images = [
@@ -158,6 +165,7 @@ class LineBotManager():
         reply_text = data.get(key, '找不到相關資料')
         self.send_text_message(reply_text)
 
+    # 處理外匯市場的模板消息和查詢。
     def build_templates_4(self):
         template_url = f'{self.base_img_url}/template4-外匯市場'
         images = [
@@ -193,6 +201,7 @@ class LineBotManager():
             
         self.send_text_message(reply_text)
 
+    # 處理期貨未平倉的模板消息和查詢。
     def build_templates_5(self):
         template_url = f'{self.base_img_url}/template5-期貨未平倉'
         images = [
@@ -239,6 +248,7 @@ class LineBotManager():
         reply_text = reply_text.rstrip('\n')
         self.send_text_message(reply_text)
 
+    # 處理美股四大指數的模板消息和查詢。
     def build_templates_6(self):
         template_url = f'{self.base_img_url}/template6-美國四大指數'
         images = [f'{template_url}/費半&SP500.png', f'{template_url}/NSQ&道瓊.png']
