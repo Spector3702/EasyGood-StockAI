@@ -63,7 +63,7 @@ def handle_message(event):
     message_text = event.message.text.lower()
 
     if message_text == "多/空方精選個股":
-        linebot_manager.build_templates_1()
+        linebot_manager.build_initial_templates()
 
     elif message_text == "大盤預測":
         linebot_manager.send_text_message('正在預測大盤收盤指數...')
@@ -76,7 +76,7 @@ def handle_message(event):
         linebot_manager.build_templates_3()
 
     elif message_text == "股市光明燈":
-        linebot_manager.build_templates_4()
+        linebot_manager.send_uri_action('https://stocklight.co/')
 
     elif message_text == "理財建議書":
         linebot_manager.build_templates_5()
@@ -90,6 +90,12 @@ def handle_message(event):
 def handle_postback(event):
     linebot_manager = LineBotManager(token, event)
     postback_data = event.postback.data
+
+    if 'initial_' in postback_data:
+        if '多方篩選股票' in postback_data:
+            linebot_manager.build_templates_1()
+        elif '空方篩選股票' in postback_data:
+            linebot_manager.build_templates_3()
 
     if '1_' in postback_data:
         linebot_manager.handle_templates_1(postback_data, scrapper)

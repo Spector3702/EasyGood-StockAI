@@ -76,6 +76,30 @@ class LineBotManager():
             )
         )
 
+    def send_uri_action(self, uri):
+        message = TextSendMessage(text=f"請點擊以下連結跳轉到指定頁面：\n{uri}")
+        self.line_bot_api.push_message(self.user_id, message)
+
+    def build_initial_templates(self):
+        template_url = f'{self.base_img_url}/initial'
+        images = [
+            f'{template_url}/多方篩選股票.png',
+            f'{template_url}/空方篩選股票.png'
+        ]
+        titles = ['多方篩選股票', '空方篩選股票']
+        texts = ['選擇多方篩選股票', '選擇空方篩選股票']
+        actions = [
+            [
+                PostbackAction(label='選擇', data='initial_多方篩選股票')
+            ],
+            [
+                PostbackAction(label='選擇', data='initial_空方篩選股票')
+            ]
+        ]
+
+        self.send_template(images, titles, texts, actions)
+
+
     # build_templates_1 方法：建立多方篩選股票的模板消息。
     # handle_templates_1 方法：處理多方篩選股票的查詢，根據回傳的數據查找並回應相應的信息。
     def build_templates_1(self):
@@ -165,41 +189,41 @@ class LineBotManager():
         reply_text = data.get(key, '找不到相關資料')
         self.send_text_message(reply_text)
 
-    # 處理外匯市場的模板消息和查詢。
-    def build_templates_4(self):
-        template_url = f'{self.base_img_url}/template4-外匯市場'
-        images = [
-            f'{template_url}/美元兌台幣.png',
-            f'{template_url}/美元兌日圓.png'
-        ]
-        titles = ['美元/台幣', '美元/日圓']
-        texts = ['看透美元匯率，市場強弱，捕捉股市資金變化。', '日幣避險巧妙，智選投資，穩守風險，掌握未來。']
-        actions = [
-            [
-                PostbackAction(label='查詢', data='4_美元/台幣'),
-                URIAction(label='美元/台幣 - StockQ', uri='https://www.stockq.org/forex/USDTWD.php')
-            ],
-            [
-                PostbackAction(label='查詢', data='4_美元/日圓'),
-                URIAction(label='美元/日圓 - StockQ', uri='https://www.stockq.org/forex/USDJPY.php')
-            ]
-        ]
+    # # 處理外匯市場的模板消息和查詢。
+    # def build_templates_4(self):
+    #     template_url = f'{self.base_img_url}/template4-外匯市場'
+    #     images = [
+    #         f'{template_url}/美元兌台幣.png',
+    #         f'{template_url}/美元兌日圓.png'
+    #     ]
+    #     titles = ['美元/台幣', '美元/日圓']
+    #     texts = ['看透美元匯率，市場強弱，捕捉股市資金變化。', '日幣避險巧妙，智選投資，穩守風險，掌握未來。']
+    #     actions = [
+    #         [
+    #             PostbackAction(label='查詢', data='4_美元/台幣'),
+    #             URIAction(label='美元/台幣 - StockQ', uri='https://www.stockq.org/forex/USDTWD.php')
+    #         ],
+    #         [
+    #             PostbackAction(label='查詢', data='4_美元/日圓'),
+    #             URIAction(label='美元/日圓 - StockQ', uri='https://www.stockq.org/forex/USDJPY.php')
+    #         ]
+    #     ]
 
-        self.send_template(images, titles, texts, actions)
+    #     self.send_template(images, titles, texts, actions)
 
-    def handle_templates_4(self, postback_data, scrapper):
-        if postback_data == '4_美元/台幣':
-            self.send_text_message('正在查詢美元/台幣...')
-            data = scrapper.get_USD_Index_data()
-            reply_text = '您好，今日美元/台幣匯率為:\n'
-            reply_text += '\n'.join(f"{key}: {value}" for key, value in data.items())
-        else:
-            self.send_text_message('正在查詢美元/日圓...')
-            data = scrapper.get_JPY_Index_data()
-            reply_text = '您好，今日美元/日幣匯率為:\n'
-            reply_text += '\n'.join(f"{key}: {value}" for key, value in data.items())
+    # def handle_templates_4(self, postback_data, scrapper):
+    #     if postback_data == '4_美元/台幣':
+    #         self.send_text_message('正在查詢美元/台幣...')
+    #         data = scrapper.get_USD_Index_data()
+    #         reply_text = '您好，今日美元/台幣匯率為:\n'
+    #         reply_text += '\n'.join(f"{key}: {value}" for key, value in data.items())
+    #     else:
+    #         self.send_text_message('正在查詢美元/日圓...')
+    #         data = scrapper.get_JPY_Index_data()
+    #         reply_text = '您好，今日美元/日幣匯率為:\n'
+    #         reply_text += '\n'.join(f"{key}: {value}" for key, value in data.items())
             
-        self.send_text_message(reply_text)
+    #     self.send_text_message(reply_text)
 
     # 處理期貨未平倉的模板消息和查詢。
     def build_templates_5(self):
