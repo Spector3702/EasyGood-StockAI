@@ -62,26 +62,26 @@ def handle_message(event):
     linebot_manager = LineBotManager(token, event)
     message_text = event.message.text.lower()
 
-    if message_text == "多方精選個股":
+    if message_text == "多/空方精選個股":
         linebot_manager.build_templates_1()
 
-    elif message_text == "大盤預測111":
+    elif message_text == "大盤預測":
         linebot_manager.send_text_message('正在預測大盤收盤指數...')
         # reply_text = predict_basedon_time()
         predicter = Predicter(scrapper)
         reply_text = predicter.gru_predict()
         linebot_manager.send_text_message(reply_text)
 
-    elif message_text == "空方精選個股":
+    elif message_text == "推播新聞":
         linebot_manager.build_templates_3()
 
-    elif message_text == "外匯市場":
+    elif message_text == "股市光明燈":
         linebot_manager.build_templates_4()
 
-    elif message_text == "期貨未平倉":
+    elif message_text == "理財建議書":
         linebot_manager.build_templates_5()
 
-    elif message_text == "美股四大指數":
+    elif message_text == "美國四大指數":
         linebot_manager.build_templates_6()
 
 

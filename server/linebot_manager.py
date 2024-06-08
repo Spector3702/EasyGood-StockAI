@@ -26,7 +26,7 @@ class LineBotManager():
             areas=[
                 RichMenuArea(
                     bounds=RichMenuBounds(x=0, y=0, width=833, height=843),
-                    action=MessageAction(label="多方精選個股", text="多方精選個股")
+                    action=MessageAction(label="多/空方精選個股", text="多/空方精選個股")
                 ),
                 RichMenuArea(
                     bounds=RichMenuBounds(x=833, y=0, width=833, height=843),
@@ -34,19 +34,19 @@ class LineBotManager():
                 ),
                 RichMenuArea(
                     bounds=RichMenuBounds(x=1666, y=0, width=834, height=843),
-                    action=MessageAction(label="空方精選個股", text="空方精選個股")
+                    action=MessageAction(label="推播新聞", text="推播新聞")
                 ),
                 RichMenuArea(
                     bounds=RichMenuBounds(x=0, y=843, width=833, height=843),
-                    action=MessageAction(label="外匯市場", text="外匯市場")
+                    action=MessageAction(label="股市光明燈", text="股市光明燈")
                 ),
                 RichMenuArea(
                     bounds=RichMenuBounds(x=833, y=843, width=833, height=843),
-                    action=MessageAction(label="期貨未平倉", text="期貨未平倉")
+                    action=MessageAction(label="理財建議書", text="理財建議書")
                 ),
                 RichMenuArea(
                     bounds=RichMenuBounds(x=1666, y=843, width=834, height=843),
-                    action=MessageAction(label="美股四大指數", text="美股四大指數")
+                    action=MessageAction(label="美國四大指數", text="美國四大指數")
                 )
             ]
         )
