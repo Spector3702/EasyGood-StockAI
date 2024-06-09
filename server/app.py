@@ -93,16 +93,14 @@ def handle_postback(event):
 
     if 'initial_' in postback_data:
         if '多方篩選股票' in postback_data:
-            linebot_manager.build_templates_1()
+            linebot_manager.build_templates_1_long()
         elif '空方篩選股票' in postback_data:
-            linebot_manager.build_templates_3()
+            linebot_manager.build_templates_1_short()
 
     if '1_' in postback_data:
-        linebot_manager.handle_templates_1(postback_data, scrapper)
+        linebot_manager.handle_templates_1_long(postback_data, scrapper)
     elif '3_' in postback_data:
-        linebot_manager.handle_templates_3(postback_data, scrapper)
-    elif '4_' in postback_data:
-        linebot_manager.handle_templates_4(postback_data, scrapper)
+        linebot_manager.handle_templates_1_short(postback_data, scrapper)
     elif '5_' in postback_data:
         linebot_manager.handle_templates_5(postback_data)
     elif '6_' in postback_data:

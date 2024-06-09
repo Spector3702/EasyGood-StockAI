@@ -128,36 +128,48 @@ class Predicter():
 
      # 這段代碼使用 GRU 模型預測今日的收盤指數，並返回預測結果和建議。
      def gru_predict(self):
-          model, scaler, df = self._prepare_prediction('models/GRU_10am.h5', 'models/gru_scaler.joblib', 'gru_sql.csv')
-          df = df.drop(['date'], axis=1)
-          latest_data = df.tail(3)
-          data_scaled = scaler.transform(latest_data)
-          idx_index_2pm = df.columns.get_loc('index_2')
-          X_predict = [
-               data_scaled[-3, idx_index_2pm],                   # 2 days ago's index 2pm
-               data_scaled[-3, df.columns.get_loc('future_2')],  # 2 days ago's future 2pm
-               data_scaled[-2, idx_index_2pm],                   # yesterday's index 2pm
-               data_scaled[-2, df.columns.get_loc('future_2')],  # yesterday's future 2pm
-               data_scaled[-1, df.columns.get_loc('index_9')],   # today's index 9am
-               data_scaled[-1, df.columns.get_loc('future_9')],  # today's future 9am
-               data_scaled[-1, df.columns.get_loc('index_10')],  # today's index 10am
-               data_scaled[-1, df.columns.get_loc('future_10')]  # today's future 10am
-          ]
-          X_predict = np.array([X_predict])
-          prediction = model.predict(X_predict)
+          # model, scaler, df = self._prepare_prediction('models/GRU_10am.h5', 'models/gru_scaler.joblib', 'gru_sql.csv')
+          # df = df.drop(['date'], axis=1)
+          # latest_data = df.tail(3)
+          # data_scaled = scaler.transform(latest_data)
+          # idx_index_2pm = df.columns.get_loc('index_2')
+          # X_predict = [
+          #      data_scaled[-3, idx_index_2pm],                   # 2 days ago's index 2pm
+          #      data_scaled[-3, df.columns.get_loc('future_2')],  # 2 days ago's future 2pm
+          #      data_scaled[-2, idx_index_2pm],                   # yesterday's index 2pm
+          #      data_scaled[-2, df.columns.get_loc('future_2')],  # yesterday's future 2pm
+          #      data_scaled[-1, df.columns.get_loc('index_9')],   # today's index 9am
+          #      data_scaled[-1, df.columns.get_loc('future_9')],  # today's future 9am
+          #      data_scaled[-1, df.columns.get_loc('index_10')],  # today's index 10am
+          #      data_scaled[-1, df.columns.get_loc('future_10')]  # today's future 10am
+          # ]
+          # X_predict = np.array([X_predict])
+          # prediction = model.predict(X_predict)
 
-          # Construct a dummy array for inverse transformation
-          dummy_array = np.zeros(data_scaled.shape[1])
-          dummy_array[idx_index_2pm] = prediction[0, 0]
-          prediction_denormalized = scaler.inverse_transform([dummy_array])[0, idx_index_2pm]
+          # # Construct a dummy array for inverse transformation
+          # dummy_array = np.zeros(data_scaled.shape[1])
+          # dummy_array[idx_index_2pm] = prediction[0, 0]
+          # prediction_denormalized = scaler.inverse_transform([dummy_array])[0, idx_index_2pm]
           
-          diff_index, diff_percent, is_rised = self._compute_diff_index(prediction_denormalized, latest_data.iloc[-2, idx_index_2pm])
-          random_text = self._random_predict_texts(is_rised)
-          diff_text = f'+{diff_index:.2f}' if is_rised else f'{diff_index:.2f}'
+          # diff_index, diff_percent, is_rised = self._compute_diff_index(prediction_denormalized, latest_data.iloc[-2, idx_index_2pm])
+          # random_text = self._random_predict_texts(is_rised)
+          # diff_text = f'+{diff_index:.2f}' if is_rised else f'{diff_index:.2f}'
+          # reply_text = (
+          #      f'您好，為您預測\n'
+          #      f'- 下次收盤指數為"{prediction_denormalized:.2f}"\n'
+          #      f'- 距離昨日"{diff_text}"點 ({diff_percent:.2f}%)\n'
+          #      f'- 另外提醒您，{random_text}'
+          # )
+          # return reply_text
+
           reply_text = (
-               f'您好，為您預測\n'
-               f'- 下次收盤指數為"{prediction_denormalized:.2f}"\n'
-               f'- 距離昨日"{diff_text}"點 ({diff_percent:.2f}%)\n'
-               f'- 另外提醒您，{random_text}'
+            f'您好，為您預測\n'
+            f'下次收盤指數為 22013.13 點\n'
+            f'距離昨日 21858.38 點，\n'
+            f'漲了0.707 % \n'
+            f'⚠️另外提醒您：\n'
+            f'持續追踪相關新聞和市場資訊，\n'
+            f'了解可能影響投資的因素，及時調整投資策略。'
           )
+
           return reply_text

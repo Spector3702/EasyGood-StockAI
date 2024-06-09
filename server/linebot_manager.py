@@ -99,10 +99,7 @@ class LineBotManager():
 
         self.send_template(images, titles, texts, actions)
 
-
-    # build_templates_1 方法：建立多方篩選股票的模板消息。
-    # handle_templates_1 方法：處理多方篩選股票的查詢，根據回傳的數據查找並回應相應的信息。
-    def build_templates_1(self):
+    def build_templates_1_long(self):
         template_url = f'{self.base_img_url}/template1-多方篩選股票'
         images = [
             f'{template_url}/突破區間.png',
@@ -116,29 +113,29 @@ class LineBotManager():
         actions = [
             [
                 PostbackAction(label='查詢', data='1_突破整理區間'),
-                URIAction(label='HiStock', uri='https://histock.tw/%E5%8F%B0%E8%82%A1%E5%A4%A7%E7%9B%A4')
+                URIAction(label='股市光明燈', uri='https://stocklight.co/')
             ],
             [
                 PostbackAction(label='查詢', data='1_爆量長紅'),
-                URIAction(label='HiStock', uri='https://histock.tw/%E5%8F%B0%E8%82%A1%E5%A4%A7%E7%9B%A4')
+                URIAction(label='股市光明燈', uri='https://stocklight.co/')
             ],
             [
                 PostbackAction(label='查詢', data='1_突破季線'),
-                URIAction(label='HiStock', uri='https://histock.tw/%E5%8F%B0%E8%82%A1%E5%A4%A7%E7%9B%A4')
+                URIAction(label='股市光明燈', uri='https://stocklight.co/')
             ],
             [
                 PostbackAction(label='查詢', data='1_多頭吞噬'),
-                URIAction(label='HiStock', uri='https://histock.tw/%E5%8F%B0%E8%82%A1%E5%A4%A7%E7%9B%A4')
+                URIAction(label='股市光明燈', uri='https://stocklight.co/')
             ],
             [
                 PostbackAction(label='查詢', data='1_5與20日均線黃金交叉'),
-                URIAction(label='HiStock', uri='https://histock.tw/%E5%8F%B0%E8%82%A1%E5%A4%A7%E7%9B%A4')
+                URIAction(label='股市光明燈', uri='https://stocklight.co/')
             ]
         ]
 
         self.send_template(images, titles, texts, actions)
 
-    def handle_templates_1(self, postback_data, scrapper):
+    def handle_templates_1_long(self, postback_data, scrapper):
         key = postback_data.split('1_', 1)[1] if '1_' in postback_data else None
         self.send_text_message(f'正在查詢{key}...')
         data = scrapper.get_stock_selection()
@@ -146,7 +143,7 @@ class LineBotManager():
         self.send_text_message(reply_text)
 
     # 處理空方篩選股票的模板消息和查詢。
-    def build_templates_3(self):
+    def build_templates_1_short(self):
         template_url = f'{self.base_img_url}/template3-空方篩選股票'
         images = [
             f'{template_url}/跌破區間.png',
@@ -160,29 +157,29 @@ class LineBotManager():
         actions = [
             [
                 PostbackAction(label='查詢', data='3_跌破整理區間'),
-                URIAction(label='HiStock', uri='https://histock.tw/%E5%8F%B0%E8%82%A1%E5%A4%A7%E7%9B%A4')
+                URIAction(label='股市光明燈', uri='https://stocklight.co/')
             ],
             [
                 PostbackAction(label='查詢', data='3_爆量長黑'),
-                URIAction(label='HiStock', uri='https://histock.tw/%E5%8F%B0%E8%82%A1%E5%A4%A7%E7%9B%A4')
+                URIAction(label='股市光明燈', uri='https://stocklight.co/')
             ],
             [
                 PostbackAction(label='查詢', data='3_跌破季線'),
-                URIAction(label='HiStock', uri='https://histock.tw/%E5%8F%B0%E8%82%A1%E5%A4%A7%E7%9B%A4')
+                URIAction(label='股市光明燈', uri='https://stocklight.co/')
             ],
             [
                 PostbackAction(label='查詢', data='3_空頭吞噬'),
-                URIAction(label='HiStock', uri='https://histock.tw/%E5%8F%B0%E8%82%A1%E5%A4%A7%E7%9B%A4')
+                URIAction(label='股市光明燈', uri='https://stocklight.co/')
             ],
             [
                 PostbackAction(label='查詢', data='3_5與20日均線死亡交叉'),
-                URIAction(label='HiStock', uri='https://histock.tw/%E5%8F%B0%E8%82%A1%E5%A4%A7%E7%9B%A4')
+                URIAction(label='股市光明燈', uri='https://stocklight.co/')
             ]
         ]
 
         self.send_template(images, titles, texts, actions)
 
-    def handle_templates_3(self, postback_data, scrapper):
+    def handle_templates_1_short(self, postback_data, scrapper):
         key = postback_data.split('3_', 1)[1] if '3_' in postback_data else None
         self.send_text_message(f'正在查詢{key}...')
         data = scrapper.get_stock_selection()
