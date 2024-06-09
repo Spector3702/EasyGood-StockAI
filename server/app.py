@@ -13,6 +13,7 @@ from gcs_helper import GcsHelper
 from linebot_manager import LineBotManager
 from predicter import Predicter
 from geminiBot import GeminiBot
+from geminiTeacher import GeminiTeacher
 
 # 這段程式碼解析命令行參數，用於指定 Chromedriver 的路徑。
 parser = argparse.ArgumentParser()
@@ -75,18 +76,25 @@ def handle_message(event):
 
     elif message_text == "推播新聞":
         linebot_manager.send_text_message('正在為您搜尋今日股市新聞...')
-        geminibot = GeminiBot(event,token)
+        GeminiBot(event,token)
         #linebot_manager.build_templates_3()
 
     elif message_text == "股市光明燈":
         linebot_manager.send_uri_action('https://stocklight.co/')
 
     elif message_text == "理財建議書":
-        linebot_manager.send_text_message('年齡、月收入、存款、目標')
+        linebot_manager.send_text_message("請依下列格式提供您的基本資料：\n"
+                    "1.年齡:\n"
+                    "2.月收入:\n"
+                    "3.預計退休年齡:\n"
+                    "4.存款:\n"
+                    "5.財務目標(夢想):")
         #linebot_manager.build_templates_5()
-
     elif message_text == "美國四大指數":
         linebot_manager.build_templates_6()
+    else:
+        GeminiTeacher(event,token)
+
 
 
 # 根據回傳事件的數據來執行相應的操作。
