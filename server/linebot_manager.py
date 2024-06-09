@@ -1,3 +1,4 @@
+import requests
 from linebot import LineBotApi
 from linebot.models import *
 
@@ -10,7 +11,7 @@ class LineBotManager():
         self.line_bot_api = LineBotApi(token)
         self.user_id = event.source.user_id
         self.base_img_url = 'https://storage.cloud.google.com/stockmarketindexai-sql/imgs'
-
+        
     # send_text_message 方法：構建並發送文本消息給用戶。
     def send_text_message(self, text):
         message = TextSendMessage(text=text)
@@ -185,6 +186,10 @@ class LineBotManager():
         data = scrapper.get_stock_selection()
         reply_text = data.get(key, '找不到相關資料')
         self.send_text_message(reply_text)
+
+    def build_templates_3(self,event):
+        user_id = event.source.user_id
+        
 
     # # 處理外匯市場的模板消息和查詢。
     # def build_templates_4(self):

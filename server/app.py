@@ -12,6 +12,7 @@ from scraper import Scrapper
 from gcs_helper import GcsHelper
 from linebot_manager import LineBotManager
 from predicter import Predicter
+from geminiBot import GeminiBot
 
 # 這段程式碼解析命令行參數，用於指定 Chromedriver 的路徑。
 parser = argparse.ArgumentParser()
@@ -23,8 +24,8 @@ app = Flask(__name__)
 scrapper = Scrapper(args.driver)
 
 # 設置 LINE Bot 的 token 和 handler。
-token = '3+6U76yxT4cU/ADsqm7RYh1i/iH8Xcytmm5zRNrIWk5KvOy57eHp7RvoU/0WKgxhh9Ss8K/FsgMoQOtsTsZZDvYnb63zIqAxjKvnhX8hFbvVkW2qQloLDoaVr1mL4FlBbW0vlxCmIjMqAORBXoLfJAdB04t89/1O/w1cDnyilFU='
-handler = WebhookHandler('e1d85fe8f7aaa09e1d36d91db15a4953')
+token = 'osKqxJOE5Sjl8SX7ZAQLlrdSfFFJworVpJQ000SHXn4qI3ku/51lwflUbIqg59iydgeFbuF3q4btHIz7wLqAt9fMkYJq1LPTl+8sNsxtkD22yW/7n5Sc8LeRGoJt92gfyksuG6gMmE5DY6JObkBzwwdB04t89/1O/w1cDnyilFU='
+handler = WebhookHandler('25059538e679f8f9ead98b47884fa562')
 
 # 根據台灣時間判斷當前時間段並使用不同的預測模型（GRU 或 LSTM）來生成預測結果。
 def predict_basedon_time():
@@ -73,13 +74,16 @@ def handle_message(event):
         linebot_manager.send_text_message(reply_text)
 
     elif message_text == "推播新聞":
-        linebot_manager.build_templates_3()
+        linebot_manager.send_text_message('正在為您搜尋今日股市新聞...')
+        geminibot = GeminiBot(event,token)
+        #linebot_manager.build_templates_3()
 
     elif message_text == "股市光明燈":
         linebot_manager.send_uri_action('https://stocklight.co/')
 
     elif message_text == "理財建議書":
-        linebot_manager.build_templates_5()
+        linebot_manager.send_text_message('年齡、月收入、存款、目標')
+        #linebot_manager.build_templates_5()
 
     elif message_text == "美國四大指數":
         linebot_manager.build_templates_6()
