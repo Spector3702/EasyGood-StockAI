@@ -1,4 +1,3 @@
-import requests
 from linebot import LineBotApi
 from linebot.models import *
 
@@ -10,8 +9,8 @@ class LineBotManager():
     def __init__(self, token, event):
         self.line_bot_api = LineBotApi(token)
         self.user_id = event.source.user_id
-        self.base_img_url = 'https://storage.cloud.google.com/stockmarketindexai-sql/imgs'
-        
+        self.base_img_url = 'https://drive.google.com/drive/folders/1bDMn_tJHVDFfz1j1WFAl1UjTmTdGW7Jy?usp=drive_link'
+
     # send_text_message 方法：構建並發送文本消息給用戶。
     def send_text_message(self, text):
         message = TextSendMessage(text=text)
@@ -82,10 +81,9 @@ class LineBotManager():
         self.line_bot_api.push_message(self.user_id, message)
 
     def build_initial_templates(self):
-        template_url = f'{self.base_img_url}/initial'
         images = [
-            f'{template_url}/多方篩選股票.png',
-            f'{template_url}/空方篩選股票.png'
+            'https://drive.google.com/uc?id=16yVPo9RMNpx3QjnbCazlS7LggXrY5JUw', #多方篩選股票.png
+            'https://drive.google.com/uc?id=1Di8g8NxetFQ0GzSVBI4HKmdrgxkMuyv_'  #空方篩選股票.png
         ]
         titles = ['多方篩選股票', '空方篩選股票']
         texts = ['選擇多方篩選股票', '選擇空方篩選股票']
@@ -103,11 +101,11 @@ class LineBotManager():
     def build_templates_1_long(self):
         template_url = f'{self.base_img_url}/template1-多方篩選股票'
         images = [
-            f'{template_url}/突破區間.png',
-            f'{template_url}/爆量長紅.png',
-            f'{template_url}/突破季線.png',
-            f'{template_url}/多頭吞噬.png',
-            f'{template_url}/黃金交叉.png'
+            'https://drive.google.com/uc?id=1IDKOe8nuvzA1RTwWFJLbld0aCvh0JwMj', #突破區間.png
+            'https://drive.google.com/uc?id=1fFLS3MXaExYbUL0nuH_rg6p2Xg4OcdeJ', #爆量長紅.png
+            'https://drive.google.com/uc?id=1WMnDWL4xDVDobsC-UJ2SbsJyxu1fqPtb', #突破季線.png
+            'https://drive.google.com/uc?id=1vEOdIHS2pfq0qiVfwJorQjpjxFwsZPMO', #多頭吞噬.png
+            'https://drive.google.com/uc?id=1Hlh7btMVXnvdoJuDRT0R3Xi_q0tS0mCC'  #黃金交叉.png
         ]
         titles = ['突破整理區間', '爆量長紅', '突破季線', '多頭吞噬', '5與20日均線黃金交叉']
         texts = ['突破整理區間', '爆量長紅', '突破季線', '多頭吞噬', '5與20日均線黃金交叉']
@@ -147,11 +145,11 @@ class LineBotManager():
     def build_templates_1_short(self):
         template_url = f'{self.base_img_url}/template3-空方篩選股票'
         images = [
-            f'{template_url}/跌破區間.png',
-            f'{template_url}/爆量長黑.png',
-            f'{template_url}/跌破季線.png',
-            f'{template_url}/空頭吞噬.png',
-            f'{template_url}/死亡交叉.png'
+            'https://drive.google.com/uc?id=1e_o6Un9pRyq4cdPdqgi1l7qbS9AW8siE', #跌破區間.png
+            'https://drive.google.com/uc?id=1yiGMqQXkJ85eC3Vt89RA15gXqXCz1RRT', #爆量長黑.png
+            'https://drive.google.com/uc?id=1PqMWX4096urWS-KBISQSfMEEvlvAi9Un', #跌破季線.png
+            'https://drive.google.com/uc?id=1oudeS5Ac_iPij-cQ5TvA_Q48QALZcDx5', #空頭吞噬.png
+            'https://drive.google.com/uc?id=1f3jwPv2u6CA_MPA2Rf4IPOjJ-1r8UAaF'  #死亡交叉.png
         ]
         titles = ['跌破整理區間', '爆量長黑', '跌破季線', '空頭吞噬', '5與20日均線死亡交叉']
         texts = ['跌破整理區間', '爆量長黑', '跌破季線', '空頭吞噬', '5與20日均線死亡交叉']
@@ -186,10 +184,6 @@ class LineBotManager():
         data = scrapper.get_stock_selection()
         reply_text = data.get(key, '找不到相關資料')
         self.send_text_message(reply_text)
-
-    def build_templates_3(self,event):
-        user_id = event.source.user_id
-        
 
     # # 處理外匯市場的模板消息和查詢。
     # def build_templates_4(self):
@@ -277,7 +271,10 @@ class LineBotManager():
     # 處理美股四大指數的模板消息和查詢。
     def build_templates_6(self):
         template_url = f'{self.base_img_url}/template6-美國四大指數'
-        images = [f'{template_url}/費半&SP500.png', f'{template_url}/NSQ&道瓊.png']
+        images = [
+            'https://drive.google.com/uc?id=18MNbiahE9Kv_C7hbGqphBkZ8N-Dwudwn', #費半&SP500.png
+            'https://drive.google.com/uc?id=1PFZ3S4eeUjscpfQahAfYLGgSedD07c2s'  #NSQ&道瓊.png
+        ]
         titles = ['費半 & S&P500', '那斯達克 & 道瓊']
         texts = ['洞悉美股四大指數，如同洞悉光明未來!', '洞悉美股四大指數，如同洞悉光明未來!']
         actions = [
